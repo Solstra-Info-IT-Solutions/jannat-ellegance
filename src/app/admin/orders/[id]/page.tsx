@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import AdminShell from '@/components/admin/AdminShell';
 
@@ -25,7 +26,8 @@ const validTrackingUrl = (value: string) => {
   }
 };
 
-export default function AdminOrderDetailPage({ params }: { params: { id: string } }) {
+export default function AdminOrderDetailPage() {
+  const { id: orderId } = useParams<{ id: string }>();
   const [order, setOrder] = useState<Order | null>(null);
   const [status, setStatus] = useState('confirmed');
   const [notes, setNotes] = useState('');
@@ -40,7 +42,8 @@ export default function AdminOrderDetailPage({ params }: { params: { id: string 
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/admin/orders/${params.id}`, { credentials: 'include' })
+    if (!orderId) return;
+    fetch(`/api/admin/orders/${orderId}`, { credentials: 'include' })
       .then((response) => (response.ok ? response.json() : null))
       .then((data) => {
         if (!data?.success) throw new Error();
@@ -51,13 +54,13 @@ export default function AdminOrderDetailPage({ params }: { params: { id: string 
         setTrackingNumber(value.shippingInfo?.trackingNumber || ''); setTrackingUrl(value.shippingInfo?.trackingUrl || '');
       })
       .catch(() => setError('Unable to load order.'));
-  }, [params.id]);
+  }, [orderId]);
 
   const save = async (event: FormEvent) => {
     event.preventDefault(); setSaving(true); setError(''); setMessage('');
     const effectiveCourier = courierChoice === 'Other' ? courierName : courierChoice;
     try {
-      const response = await fetch(`/api/admin/orders/${params.id}`, {
+      const response = await fetch(`/api/admin/orders/${orderId}`, {
         method: 'PATCH', credentials: 'include', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status, adminNotes: notes, cancelReason: status === 'cancelled' ? cancelReason : undefined, courierName: effectiveCourier, trackingNumber, trackingUrl, sendEmail }),
       });
