@@ -130,13 +130,13 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Contact Information */}
-          <div>
-            <h3 className="font-serif text-lg text-white mb-6 font-medium">
+          <div className="lg:pl-4">
+            <h3 className="mb-4 font-serif text-lg font-medium text-white">
               Get in Touch
             </h3>
-            <div className="space-y-4.5 text-sm">
+            <div className="space-y-3 text-sm">
               <div className="flex items-start gap-3">
-                <MapPin size={18} className="text-pink-300 mt-1 shrink-0" />
+                <MapPin size={18} className="mt-0.5 shrink-0 text-pink-300" />
                 <span className="text-pink-100/80 leading-6">
                   Jannat Elegance Boutique, New Delhi, 110025, India
                 </span>

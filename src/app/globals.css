@@ -55,13 +55,13 @@ body {
   }
 
   /* These selectors cover the existing Tailwind button styles consistently. */
-  :is(button, a)[class*='bg-maroon-'] {
+  :is(button, a):is([class~='bg-maroon-800'], [class~='bg-maroon-850'], [class~='bg-maroon-900'], [class~='bg-maroon-950']) {
     color: #fff;
     text-shadow: none;
     box-shadow: none;
   }
 
-  :is(button, a)[class*='bg-maroon-']:not(:disabled):hover {
+  :is(button, a):is([class~='bg-maroon-800'], [class~='bg-maroon-850'], [class~='bg-maroon-900'], [class~='bg-maroon-950']):not(:disabled):hover {
     filter: brightness(1.04);
     box-shadow: none;
   }

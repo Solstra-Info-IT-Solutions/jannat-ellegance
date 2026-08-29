@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
             className="lg:hidden rounded-lg border border-pink-200 bg-white p-2 text-maroon-850 transition hover:bg-pink-50"
             aria-label="Toggle Menu"
           >
-            {menuOpen ? <X size={26} /> : <Menu size={26} />}
+            {menuOpen ? <X size={26} strokeWidth={2.3} className="!text-maroon-850" /> : <Menu size={26} strokeWidth={2.3} className="!text-maroon-850" />}
           </button>
 
           {/* Brand Logo & Name */}
@@ -168,7 +168,7 @@ const Navbar: React.FC = () => {
                 className="flex items-center gap-2 p-2.5 rounded-full border border-pink-200 bg-maroon-50 text-maroon-850 transition hover:bg-pink-100 shadow-sm"
                 aria-label="Account"
               >
-                <User size={21} />
+                <User size={21} strokeWidth={2.2} className="!text-maroon-850" />
               </button>
 
               {/* Floating Profile Menu */}
