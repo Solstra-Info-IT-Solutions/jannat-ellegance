@@ -6,7 +6,10 @@ import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Heart,
+  House,
+  LayoutDashboard,
   Menu,
+  Package,
   Search,
   ShoppingBag,
   User,
@@ -66,7 +69,7 @@ const Navbar: React.FC = () => {
           {/* Left: Mobile Menu Button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="lg:hidden bg-maroon-950 text-white p-2 rounded-lg hover:bg-maroon-800 transition shadow-sm"
+            className="lg:hidden rounded-lg border border-pink-200 bg-white p-2 text-maroon-850 transition hover:bg-pink-50"
             aria-label="Toggle Menu"
           >
             {menuOpen ? <X size={26} /> : <Menu size={26} />}
@@ -96,24 +99,24 @@ const Navbar: React.FC = () => {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1.5 rounded-full bg-pink-50 p-1.5 text-sm font-bold font-sans">
+          <nav className="hidden lg:flex items-center gap-2 rounded-full border border-pink-100 bg-white p-1.5 text-sm font-bold font-sans">
             <Link
               href="/"
-              className="rounded-full border border-rose-300 bg-gradient-to-r from-rose-500 to-pink-600 px-4 py-2 text-white shadow-md transition-all hover:-translate-y-0.5 hover:from-rose-600 hover:to-pink-700 hover:shadow-lg"
+              className="rounded-full border border-pink-200 bg-pink-50 px-4 py-2 text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
             >
               Home
             </Link>
 
             <Link
               href="/shop"
-              className="rounded-full border border-fuchsia-300 bg-gradient-to-r from-fuchsia-600 to-purple-700 px-4 py-2 text-white shadow-md transition-all hover:-translate-y-0.5 hover:from-fuchsia-700 hover:to-purple-800 hover:shadow-lg"
+              className="rounded-full border border-pink-200 bg-pink-50 px-4 py-2 text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
             >
               Shop
             </Link>
 
             <Link
               href="/#about"
-              className="rounded-full border border-teal-300 bg-gradient-to-r from-teal-600 to-cyan-700 px-4 py-2 text-white shadow-md transition-all hover:-translate-y-0.5 hover:from-teal-700 hover:to-cyan-800 hover:shadow-lg"
+              className="rounded-full border border-pink-200 bg-pink-50 px-4 py-2 text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
             >
               About
             </Link>
@@ -186,7 +189,7 @@ const Navbar: React.FC = () => {
                         <Link
                           href="/login"
                           onClick={() => setAuthDropdownOpen(false)}
-                          className="flex items-center justify-center gap-2 w-full py-2 bg-maroon-800 hover:bg-maroon-900 text-white text-xs font-semibold uppercase tracking-wider rounded-xl transition shadow-md"
+                          className="flex w-full items-center justify-center gap-2 rounded-lg border border-pink-200 bg-pink-50 py-2 text-xs font-semibold uppercase tracking-wider text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
                         >
                           <LogIn size={14} /> Log In
                         </Link>
@@ -212,31 +215,31 @@ const Navbar: React.FC = () => {
                         <Link
                           href="/profile"
                           onClick={() => setAuthDropdownOpen(false)}
-                          className="flex items-center gap-2 w-full py-2 px-3 bg-gradient-to-r from-rose-500 to-pink-600 text-white text-xs font-bold uppercase tracking-wide rounded-xl shadow-sm transition hover:brightness-110"
+                          className="flex w-full items-center gap-2 rounded-lg border border-pink-200 bg-pink-50 px-3 py-2 text-xs font-bold uppercase tracking-wide text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
                         >
-                          My Profile
+                          <User size={14} /> My Profile
                         </Link>
                         <Link
                           href="/orders"
                           onClick={() => setAuthDropdownOpen(false)}
-                          className="flex items-center gap-2 w-full py-2 px-3 bg-gradient-to-r from-violet-600 to-indigo-700 text-white text-xs font-bold uppercase tracking-wide rounded-xl shadow-sm transition hover:brightness-110"
+                          className="flex w-full items-center gap-2 rounded-lg border border-pink-200 bg-pink-50 px-3 py-2 text-xs font-bold uppercase tracking-wide text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
                         >
-                          My Orders
+                          <Package size={14} /> My Orders
                         </Link>
                         <Link
                           href="/shop?wishlist=true"
                           onClick={() => setAuthDropdownOpen(false)}
-                          className="flex items-center gap-2 w-full py-2 px-3 bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white text-xs font-bold uppercase tracking-wide rounded-xl shadow-sm transition hover:brightness-110"
+                          className="flex w-full items-center gap-2 rounded-lg border border-pink-200 bg-pink-50 px-3 py-2 text-xs font-bold uppercase tracking-wide text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
                         >
-                          My Wishlist
+                          <Heart size={14} /> My Wishlist
                         </Link>
                         {user?.role === 'admin' && (
                           <Link
                             href="/admin"
                             onClick={() => setAuthDropdownOpen(false)}
-                            className="flex items-center gap-2 w-full py-2 px-3 bg-gradient-to-r from-teal-600 to-cyan-700 text-white text-xs font-bold uppercase tracking-wide rounded-xl shadow-sm transition hover:brightness-110"
+                            className="flex w-full items-center gap-2 rounded-lg border border-pink-200 bg-pink-50 px-3 py-2 text-xs font-bold uppercase tracking-wide text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
                           >
-                            Admin Console
+                            <LayoutDashboard size={14} /> Admin Console
                           </Link>
                         )}
                       </div>
@@ -281,31 +284,31 @@ const Navbar: React.FC = () => {
         {/* Mobile Navigation Drawer */}
         {menuOpen && (
           <div className="lg:hidden pb-5 animate-fadeUp">
-            <nav className="mt-2 flex flex-col gap-2.5 border-t border-maroon-100 pt-5 font-sans" aria-label="Mobile navigation">
+            <nav className="mt-2 flex flex-col gap-3 border-t border-pink-100 pt-5 font-sans" aria-label="Mobile navigation">
               <Link
                 onClick={() => setMenuOpen(false)}
                 href="/"
-                className="flex min-h-12 items-center rounded-xl border border-rose-300 bg-gradient-to-r from-rose-500 to-pink-600 px-4 py-3 text-base font-bold text-white shadow-[0_8px_18px_rgba(225,29,72,.22)] transition duration-200 hover:-translate-y-0.5 hover:from-rose-600 hover:to-pink-700 hover:shadow-[0_12px_24px_rgba(225,29,72,.28)] active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-700"
+                className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-base font-bold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
               >
-                Home
+                <House size={22} strokeWidth={1.8} /> Home
               </Link>
 
               <Link
                 onClick={() => setMenuOpen(false)}
                 href="/shop"
-                className="flex min-h-12 items-center rounded-xl border border-fuchsia-300 bg-gradient-to-r from-fuchsia-600 to-purple-700 px-4 py-3 text-base font-bold text-white shadow-[0_8px_18px_rgba(147,51,234,.22)] transition duration-200 hover:-translate-y-0.5 hover:from-fuchsia-700 hover:to-purple-800 hover:shadow-[0_12px_24px_rgba(147,51,234,.28)] active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-700"
+                className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-base font-bold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
               >
-                Shop
+                <ShoppingBag size={22} strokeWidth={1.8} /> Shop
               </Link>
 
               <Link
                 onClick={() => setMenuOpen(false)}
                 href="/shop?wishlist=true"
-                className="flex min-h-12 items-center justify-between rounded-xl border border-pink-300 bg-gradient-to-r from-pink-500 to-rose-600 px-4 py-3 text-base font-bold text-white shadow-[0_8px_18px_rgba(236,72,153,.2)] transition duration-200 hover:-translate-y-0.5 hover:from-pink-600 hover:to-rose-700 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700"
+                className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-base font-bold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
               >
-                <span>Wishlist</span>
+                <Heart size={22} strokeWidth={1.8} /> <span>Wishlist</span>
                 {wishlist.length > 0 && (
-                  <span className="rounded-full bg-white px-2.5 py-0.5 text-xs font-extrabold text-pink-700 shadow-sm">
+                  <span className="ml-auto rounded-full bg-maroon-850 px-2.5 py-0.5 text-xs font-extrabold text-white">
                     {wishlist.length}
                   </span>
                 )}
@@ -316,16 +319,16 @@ const Navbar: React.FC = () => {
                   <Link
                     onClick={() => setMenuOpen(false)}
                     href="/login"
-                    className="flex min-h-12 items-center rounded-xl border border-maroon-300 bg-gradient-to-r from-maroon-800 to-maroon-950 px-4 py-3 text-base font-bold text-white shadow-[0_8px_18px_rgba(74,14,23,.2)] transition duration-200 hover:-translate-y-0.5 hover:from-maroon-900 hover:to-maroon-950 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-800"
+                    className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-base font-bold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
                   >
-                    Log In
+                    <User size={22} strokeWidth={1.8} /> Log In
                   </Link>
                   <Link
                     onClick={() => setMenuOpen(false)}
                     href="/signup"
-                    className="flex min-h-12 items-center rounded-xl border border-pink-600 bg-pink-600 px-4 py-3 text-base font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-maroon-850 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700"
+                    className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-600 bg-pink-600 px-4 py-3 text-base font-bold text-white transition hover:bg-maroon-850"
                   >
-                    Create Account
+                    <UserPlus size={22} strokeWidth={1.8} /> Create Account
                   </Link>
                 </>
               ) : (
@@ -333,18 +336,18 @@ const Navbar: React.FC = () => {
                   <Link
                     onClick={() => setMenuOpen(false)}
                     href="/orders"
-                    className="flex min-h-12 items-center rounded-xl border border-maroon-850 bg-maroon-850 px-4 py-3 text-base font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-pink-600 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-850"
+                    className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-base font-bold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
                   >
-                    My Orders
+                    <Package size={22} strokeWidth={1.8} /> My Orders
                   </Link>
-                  <Link onClick={() => setMenuOpen(false)} href="/profile" className="flex min-h-12 items-center rounded-xl border border-pink-600 bg-pink-600 px-4 py-3 text-base font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-maroon-850 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700">My Profile</Link>
+                  <Link onClick={() => setMenuOpen(false)} href="/profile" className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-base font-bold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"><User size={22} strokeWidth={1.8} /> My Profile</Link>
                   {user?.role === 'admin' && (
                     <Link
                       onClick={() => setMenuOpen(false)}
                       href="/admin"
-                      className="flex min-h-12 items-center rounded-xl border border-maroon-850 bg-maroon-850 px-4 py-3 text-base font-extrabold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-pink-600 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-850"
+                      className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-base font-extrabold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
                     >
-                      Admin Console
+                      <LayoutDashboard size={22} strokeWidth={1.8} /> Admin Console
                     </Link>
                   )}
                   <button
@@ -352,7 +355,7 @@ const Navbar: React.FC = () => {
                       setMenuOpen(false);
                       void logout();
                     }}
-                    className="flex min-h-12 items-center gap-2 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-left text-base font-bold text-maroon-850 transition duration-200 hover:-translate-y-0.5 hover:border-maroon-850 hover:bg-maroon-850 hover:text-white active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-850"
+                    className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-left text-base font-bold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
                   >
                     <LogOut size={14} /> Log Out
                   </button>
