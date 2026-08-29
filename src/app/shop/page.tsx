@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
@@ -11,6 +11,10 @@ type Category = { _id: string; name: string };
 const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
 
 export default function ShopPage() {
+  return <Suspense fallback={<main className="min-h-screen bg-[#fff8fa] py-16 text-center text-sm text-gray-500">Loading designs…</main>}><ShopContent /></Suspense>;
+}
+
+function ShopContent() {
   const searchParams = useSearchParams();
   const { wishlist } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
