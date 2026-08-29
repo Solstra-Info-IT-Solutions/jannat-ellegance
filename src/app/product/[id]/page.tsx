@@ -4,15 +4,16 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Heart, Minus, Plus, ShoppingBag } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/types';
 
 const salePrice = (product: Product) => product.salePrice ?? (product.isOnSale ? Math.max(0, product.price - (product.discountType === 'percentage' ? product.price * product.discount / 100 : product.discount)) : product.price);
-export default function ProductPage({ params }: { params: { id: string } }) {
+export default function ProductPage() {
   const router = useRouter(); const { addToCart, toggleWishlist, isWishlisted } = useCart();
+  const { id: productId } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null); const [loading, setLoading] = useState(true); const [selectedSize, setSelectedSize] = useState(''); const [quantity, setQuantity] = useState(1); const [imageIndex, setImageIndex] = useState(0);
-  useEffect(() => { let active = true; fetch(`/api/products/${params.id}`).then((res) => res.ok ? res.json() : null).then((data) => { if (!active) return; setProduct(data?.product || null); setSelectedSize(data?.product?.sizes?.find((item: { stock: number }) => item.stock > 0)?.size || ''); }).catch(() => active && setProduct(null)).finally(() => active && setLoading(false)); return () => { active = false; }; }, [params.id]);
+  useEffect(() => { if (!productId) return; let active = true; fetch(`/api/products/${productId}`).then((res) => res.ok ? res.json() : null).then((data) => { if (!active) return; setProduct(data?.product || null); setSelectedSize(data?.product?.sizes?.find((item: { stock: number }) => item.stock > 0)?.size || ''); }).catch(() => active && setProduct(null)).finally(() => active && setLoading(false)); return () => { active = false; }; }, [productId]);
   if (loading) return <main className="min-h-[70vh] grid place-items-center bg-[#fff8fa] text-maroon-900">Loading design…</main>;
   if (!product) return <main className="min-h-[70vh] grid place-items-center bg-[#fff8fa] text-center"><div><h1 className="font-serif text-3xl text-maroon-950">Design not found</h1><Link href="/shop" className="inline-block mt-5 rounded-full bg-maroon-800 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white">Return to shop</Link></div></main>;
   const imageUrls = product.imageUrls.length ? product.imageUrls : ['/images/logo.jpeg']; const selectedStock = product.sizes.find((item) => item.size === selectedSize)?.stock || 0; const price = salePrice(product);

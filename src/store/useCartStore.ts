@@ -12,9 +12,12 @@ export const useCartStore = create<CartState>()(persist((set, get) => ({
   cart: [], wishlist: [], cartDrawerOpen: false,
   setCartDrawerOpen: (open) => set({ cartDrawerOpen: open }),
   addToCart: (product, size, quantity = 1) => {
+    const availableStock = product.sizes.find((item) => item.size === size)?.stock || 0;
+    if (availableStock < 1) return;
     const cart = get().cart; const existing = cart.find((item) => item.id === product.id && item.size === size);
     const salePrice = product.salePrice ?? (product.isOnSale ? Math.max(0, product.price - (product.discountType === 'percentage' ? product.price * product.discount / 100 : product.discount)) : product.price);
-    const next = existing ? cart.map((item) => item === existing ? { ...item, price: salePrice, quantity: item.quantity + quantity } : item) : [...cart, { id: product.id, name: product.name, price: salePrice, category: product.category, size, image: product.imageUrls[0] || '/images/logo.jpeg', quantity }];
+    const nextQuantity = Math.min(availableStock, (existing?.quantity || 0) + quantity);
+    const next = existing ? cart.map((item) => item === existing ? { ...item, price: salePrice, quantity: nextQuantity } : item) : [...cart, { id: product.id, name: product.name, price: salePrice, category: product.category, size, image: product.imageUrls[0] || '/images/logo.jpeg', quantity: Math.min(quantity, availableStock) }];
     set({ cart: next, cartDrawerOpen: true });
   },
   removeFromCart: (id, size) => set({ cart: get().cart.filter((item) => !(item.id === id && item.size === size)) }),

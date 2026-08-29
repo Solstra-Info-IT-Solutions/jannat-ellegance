@@ -112,20 +112,6 @@ const Navbar: React.FC = () => {
             </Link>
 
             <Link
-              href="/shop?category=Frock Suit"
-              className="rounded-full border border-amber-300 bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-2 text-white shadow-md transition-all hover:-translate-y-0.5 hover:from-amber-600 hover:to-orange-700 hover:shadow-lg"
-            >
-              Frocks
-            </Link>
-
-            <Link
-              href="/shop?category=Sharara Suit"
-              className="rounded-full border border-violet-300 bg-gradient-to-r from-violet-600 to-indigo-700 px-4 py-2 text-white shadow-md transition-all hover:-translate-y-0.5 hover:from-violet-700 hover:to-indigo-800 hover:shadow-lg"
-            >
-              Shararas
-            </Link>
-
-            <Link
               href="/#about"
               className="rounded-full border border-teal-300 bg-gradient-to-r from-teal-600 to-cyan-700 px-4 py-2 text-white shadow-md transition-all hover:-translate-y-0.5 hover:from-teal-700 hover:to-cyan-800 hover:shadow-lg"
             >
@@ -310,22 +296,6 @@ const Navbar: React.FC = () => {
                 className="flex min-h-12 items-center rounded-xl border border-fuchsia-300 bg-gradient-to-r from-fuchsia-600 to-purple-700 px-4 py-3 text-base font-bold text-white shadow-[0_8px_18px_rgba(147,51,234,.22)] transition duration-200 hover:-translate-y-0.5 hover:from-fuchsia-700 hover:to-purple-800 hover:shadow-[0_12px_24px_rgba(147,51,234,.28)] active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-700"
               >
                 Shop
-              </Link>
-
-              <Link
-                onClick={() => setMenuOpen(false)}
-                href="/shop?category=Frock Suit"
-                className="flex min-h-12 items-center rounded-xl border border-amber-300 bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-3 text-base font-bold text-white shadow-[0_8px_18px_rgba(234,88,12,.22)] transition duration-200 hover:-translate-y-0.5 hover:from-amber-600 hover:to-orange-700 hover:shadow-[0_12px_24px_rgba(234,88,12,.28)] active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700"
-              >
-                Frock Suits
-              </Link>
-
-              <Link
-                onClick={() => setMenuOpen(false)}
-                href="/shop?category=Sharara Suit"
-                className="flex min-h-12 items-center rounded-xl border border-indigo-300 bg-gradient-to-r from-indigo-600 to-violet-700 px-4 py-3 text-base font-bold text-white shadow-[0_8px_18px_rgba(79,70,229,.22)] transition duration-200 hover:-translate-y-0.5 hover:from-indigo-700 hover:to-violet-800 hover:shadow-[0_12px_24px_rgba(79,70,229,.28)] active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
-              >
-                Sharara Suits
               </Link>
 
               <Link
