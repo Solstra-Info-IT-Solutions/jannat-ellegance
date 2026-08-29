@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import React from 'react';
 
 const FloatingWhatsApp: React.FC = () => {
@@ -12,20 +13,20 @@ const FloatingWhatsApp: React.FC = () => {
       href={waUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-40 grid h-14 w-14 place-items-center rounded-full border border-pink-300 bg-maroon-850 text-white shadow-[0_10px_24px_rgba(74,14,23,.28)] transition hover:bg-maroon-950 focus-visible:outline-none group"
+      className="group fixed bottom-6 right-6 z-40 grid h-16 w-16 place-items-center rounded-full border-2 border-pink-300 bg-white p-1 shadow-[0_8px_20px_rgba(74,14,23,.24)] transition-transform hover:scale-105 focus-visible:outline-none"
       title="Chat with Jannat Elegance"
       aria-label="Chat on WhatsApp"
     >
-      <svg
-        className="w-7 h-7 relative z-10"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.436 0 9.851-4.388 9.854-9.778.002-2.611-1.006-5.066-2.84-6.902C16.45 2.089 14.025 1.08 11.4 1.08c-5.43 0-9.843 4.39-9.846 9.78-.001 2.029.531 4.015 1.543 5.751L2.1 21.9l5.4-.73-.854-.424zm12.355-6.852c-.346-.172-2.049-1.007-2.363-1.12-.313-.115-.542-.172-.77.172-.228.344-.882 1.12-1.08 1.348-.198.228-.396.258-.742.086-1.03-.513-1.745-.986-2.585-2.426-.22-.376.22-.35.63-1.173.067-.136.033-.255-.017-.356-.05-.1-.442-1.066-.607-1.464-.16-.388-.323-.336-.442-.342-.114-.006-.244-.006-.375-.006-.13 0-.342.049-.52.246-.178.197-.68.664-.68 1.619s.694 1.874.792 2.006c.098.132 1.365 2.085 3.308 2.92.463.2 1.018.318 1.4.24.41-.06.843-.228 1.08-.49.237-.263.237-.49.166-.543-.07-.053-.268-.086-.613-.258z" />
-      </svg>
+      <Image
+        src="/images/whatsapp-logo-4456_512.png"
+        alt=""
+        width={56}
+        height={56}
+        className="h-full w-full rounded-full object-contain"
+        priority
+      />
       
-      <span className="absolute right-16 rounded-lg border border-maroon-100 bg-white px-3 py-1.5 text-xs font-semibold text-maroon-900 opacity-0 shadow-sm transition-opacity duration-200 whitespace-nowrap pointer-events-none group-hover:opacity-100">
+      <span className="pointer-events-none absolute right-[4.5rem] whitespace-nowrap rounded-md bg-maroon-850 px-3 py-1.5 text-xs font-semibold text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
         Chat with us
       </span>
     </a>

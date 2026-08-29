@@ -193,7 +193,7 @@ const Navbar: React.FC = () => {
                         <Link
                           href="/signup"
                           onClick={() => setAuthDropdownOpen(false)}
-                          className="flex items-center justify-center gap-2 w-full py-2 border border-maroon-250 text-maroon-800 text-xs font-semibold uppercase tracking-wider rounded-xl transition hover:bg-maroon-50/50"
+                          className="flex items-center justify-center gap-2 w-full rounded-lg border border-pink-600 bg-pink-600 py-2 text-xs font-semibold uppercase tracking-wider text-white transition hover:border-maroon-850 hover:bg-maroon-850"
                         >
                           <UserPlus size={14} /> Create Account
                         </Link>
@@ -246,7 +246,7 @@ const Navbar: React.FC = () => {
                           setAuthDropdownOpen(false);
                           void logout();
                         }}
-                        className="flex items-center gap-2 w-full py-2 px-3 text-red-650 hover:bg-red-50 text-xs font-semibold rounded-lg transition"
+                        className="flex items-center gap-2 w-full rounded-lg border border-pink-200 bg-pink-50 px-3 py-2 text-xs font-semibold text-maroon-850 transition hover:border-maroon-850 hover:bg-maroon-850 hover:text-white"
                       >
                         <LogOut size={14} /> Log Out
                       </button>
@@ -323,7 +323,7 @@ const Navbar: React.FC = () => {
                   <Link
                     onClick={() => setMenuOpen(false)}
                     href="/signup"
-                    className="flex min-h-12 items-center rounded-xl border border-teal-300 bg-gradient-to-r from-teal-600 to-cyan-700 px-4 py-3 text-base font-bold text-white shadow-[0_8px_18px_rgba(8,145,178,.2)] transition duration-200 hover:-translate-y-0.5 hover:from-teal-700 hover:to-cyan-800 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+                    className="flex min-h-12 items-center rounded-xl border border-pink-600 bg-pink-600 px-4 py-3 text-base font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-maroon-850 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700"
                   >
                     Create Account
                   </Link>
@@ -333,16 +333,16 @@ const Navbar: React.FC = () => {
                   <Link
                     onClick={() => setMenuOpen(false)}
                     href="/orders"
-                    className="flex min-h-12 items-center rounded-xl border border-sky-300 bg-gradient-to-r from-sky-600 to-blue-700 px-4 py-3 text-base font-bold text-white shadow-[0_8px_18px_rgba(37,99,235,.2)] transition duration-200 hover:-translate-y-0.5 hover:from-sky-700 hover:to-blue-800 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+                    className="flex min-h-12 items-center rounded-xl border border-maroon-850 bg-maroon-850 px-4 py-3 text-base font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-pink-600 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-850"
                   >
                     My Orders
                   </Link>
-                  <Link onClick={() => setMenuOpen(false)} href="/profile" className="flex min-h-12 items-center rounded-xl border border-violet-300 bg-gradient-to-r from-violet-600 to-purple-700 px-4 py-3 text-base font-bold text-white shadow-[0_8px_18px_rgba(124,58,237,.2)] transition duration-200 hover:-translate-y-0.5 hover:from-violet-700 hover:to-purple-800 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-700">My Profile</Link>
+                  <Link onClick={() => setMenuOpen(false)} href="/profile" className="flex min-h-12 items-center rounded-xl border border-pink-600 bg-pink-600 px-4 py-3 text-base font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-maroon-850 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700">My Profile</Link>
                   {user?.role === 'admin' && (
                     <Link
                       onClick={() => setMenuOpen(false)}
                       href="/admin"
-                      className="flex min-h-12 items-center rounded-xl border border-amber-300 bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-3 text-base font-extrabold text-white shadow-[0_8px_18px_rgba(234,88,12,.22)] transition duration-200 hover:-translate-y-0.5 hover:from-amber-600 hover:to-orange-700 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700"
+                      className="flex min-h-12 items-center rounded-xl border border-maroon-850 bg-maroon-850 px-4 py-3 text-base font-extrabold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-pink-600 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-850"
                     >
                       Admin Console
                     </Link>
@@ -352,7 +352,7 @@ const Navbar: React.FC = () => {
                       setMenuOpen(false);
                       void logout();
                     }}
-                    className="flex min-h-12 items-center gap-2 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-left text-base font-bold text-red-700 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-red-600 hover:text-white hover:shadow-md active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
+                    className="flex min-h-12 items-center gap-2 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-left text-base font-bold text-maroon-850 transition duration-200 hover:-translate-y-0.5 hover:border-maroon-850 hover:bg-maroon-850 hover:text-white active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-850"
                   >
                     <LogOut size={14} /> Log Out
                   </button>

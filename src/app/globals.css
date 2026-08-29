@@ -45,6 +45,9 @@ body {
     background-image: none;
     background-color: #800020;
     border-color: #800020;
+    color: #fff;
+    text-shadow: none;
+    box-shadow: none;
   }
 
   :is(button, a)[class*='bg-gradient-to-r']:not(:disabled):hover {
@@ -63,13 +66,13 @@ body {
     box-shadow: none;
   }
 
-  :is(button, a)[class*='border-maroon-']:not([class*='bg-maroon-']) {
+  :is(button, a)[class*='border-maroon-']:not([class*='bg-maroon-']):not([class*='bg-gradient-to-r']) {
     border-width: 1px;
     color: #720821;
     background-color: #fff;
   }
 
-  :is(button, a)[class*='border-maroon-']:not([class*='bg-maroon-']):hover {
+  :is(button, a)[class*='border-maroon-']:not([class*='bg-maroon-']):not([class*='bg-gradient-to-r']):hover {
     background-color: #fff0f3;
     border-color: #8c092a;
   }
