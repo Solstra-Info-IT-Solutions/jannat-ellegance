@@ -56,7 +56,7 @@ const CategorySlider: React.FC = () => {
           {/* Scroll Left Button */}
           <button
             onClick={() => handleScroll('left')}
-            className="absolute -left-2 sm:-left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-maroon-100 rounded-full flex items-center justify-center shadow-luxury hover:bg-maroon-50 hover:border-maroon-300 transition duration-300 text-maroon-900 group-hover:scale-105"
+            className="absolute left-1 sm:-left-5 top-1/2 -translate-y-1/2 z-30 grid h-11 w-11 place-items-center rounded-full border border-pink-300 bg-maroon-850 text-white shadow-[0_8px_18px_rgba(74,14,23,.28)] transition hover:bg-maroon-950 focus-visible:outline-none"
             aria-label="Scroll left"
           >
             <ChevronLeft size={20} />
@@ -96,7 +96,7 @@ const CategorySlider: React.FC = () => {
           {/* Scroll Right Button */}
           <button
             onClick={() => handleScroll('right')}
-            className="absolute -right-2 sm:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-maroon-100 rounded-full flex items-center justify-center shadow-luxury hover:bg-maroon-50 hover:border-maroon-300 transition duration-300 text-maroon-900 group-hover:scale-105"
+            className="absolute right-1 sm:-right-5 top-1/2 -translate-y-1/2 z-30 grid h-11 w-11 place-items-center rounded-full border border-pink-300 bg-maroon-850 text-white shadow-[0_8px_18px_rgba(74,14,23,.28)] transition hover:bg-maroon-950 focus-visible:outline-none"
             aria-label="Scroll right"
           >
             <ChevronRight size={20} />

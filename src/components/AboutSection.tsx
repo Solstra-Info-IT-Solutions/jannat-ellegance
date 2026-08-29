@@ -67,6 +67,11 @@ const AboutSection: React.FC = () => {
               <p className="text-pink-100/90 leading-8 text-sm sm:text-base font-normal">
                 At Jannat Elegance, we believe fashion should do more than dress you—it should express you. Our designs celebrate femininity, Indian heritage and modern elegance, creating pieces that you can cherish, wear and make your own.
               </p>
+              <div className="mt-7 grid gap-3 sm:grid-cols-3">
+                <div className="rounded-xl border border-pink-200/20 bg-white/5 p-3"><p className="text-xs font-bold uppercase tracking-wider text-pink-300">Craft</p><p className="mt-1 text-xs leading-5 text-pink-100/80">Refined details and graceful silhouettes in every piece.</p></div>
+                <div className="rounded-xl border border-pink-200/20 bg-white/5 p-3"><p className="text-xs font-bold uppercase tracking-wider text-pink-300">Comfort</p><p className="mt-1 text-xs leading-5 text-pink-100/80">Designed to move beautifully through meaningful moments.</p></div>
+                <div className="rounded-xl border border-pink-200/20 bg-white/5 p-3"><p className="text-xs font-bold uppercase tracking-wider text-pink-300">Confidence</p><p className="mt-1 text-xs leading-5 text-pink-100/80">Made for the woman who wants to feel completely herself.</p></div>
+              </div>
             </div>
 
             <div className="border-t border-white/10 pt-6 mt-8 flex justify-between items-center flex-wrap gap-4 text-xs tracking-widest uppercase font-semibold text-pink-300 font-sans">

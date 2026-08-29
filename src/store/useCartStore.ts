@@ -12,10 +12,12 @@ export const useCartStore = create<CartState>()(persist((set, get) => ({
   cart: [], wishlist: [], cartDrawerOpen: false,
   setCartDrawerOpen: (open) => set({ cartDrawerOpen: open }),
   addToCart: (product, size, quantity = 1) => {
-    const availableStock = product.sizes.find((item) => item.size === size)?.stock || 0;
+    const selectedSize = product.sizes.find((item) => item.size === size);
+    const availableStock = selectedSize?.stock || 0;
     if (availableStock < 1) return;
     const cart = get().cart; const existing = cart.find((item) => item.id === product.id && item.size === size);
-    const salePrice = product.salePrice ?? (product.isOnSale ? Math.max(0, product.price - (product.discountType === 'percentage' ? product.price * product.discount / 100 : product.discount)) : product.price);
+    const sizePrice = selectedSize?.price ?? product.price;
+    const salePrice = product.isOnSale ? Math.max(0, sizePrice - (product.discountType === 'percentage' ? sizePrice * product.discount / 100 : product.discount)) : sizePrice;
     const nextQuantity = Math.min(availableStock, (existing?.quantity || 0) + quantity);
     const next = existing ? cart.map((item) => item === existing ? { ...item, price: salePrice, quantity: nextQuantity } : item) : [...cart, { id: product.id, name: product.name, price: salePrice, category: product.category, size, image: product.imageUrls[0] || '/images/logo.jpeg', quantity: Math.min(quantity, availableStock) }];
     set({ cart: next, cartDrawerOpen: true });

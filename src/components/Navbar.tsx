@@ -124,7 +124,7 @@ const Navbar: React.FC = () => {
             {/* Search Toggle */}
             <button
               onClick={() => setSearchOpen(!searchOpen)}
-              className="p-2.5 rounded-full bg-amber-100 border border-amber-200 hover:bg-amber-200 text-amber-950 transition shadow-sm"
+              className="p-2.5 rounded-full border border-pink-200 bg-pink-50 text-maroon-850 transition hover:bg-pink-100 shadow-sm"
               aria-label="Search"
             >
               <Search size={21} />
@@ -162,7 +162,7 @@ const Navbar: React.FC = () => {
             <div className="relative hidden sm:block" ref={dropdownRef}>
               <button
                 onClick={() => setAuthDropdownOpen(!authDropdownOpen)}
-                className="flex items-center gap-2 p-2.5 rounded-full bg-violet-100 text-violet-950 hover:bg-violet-200 transition border border-violet-200 shadow-sm"
+                className="flex items-center gap-2 p-2.5 rounded-full border border-pink-200 bg-maroon-50 text-maroon-850 transition hover:bg-pink-100 shadow-sm"
                 aria-label="Account"
               >
                 <User size={21} />

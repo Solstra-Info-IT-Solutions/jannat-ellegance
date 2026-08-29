@@ -32,6 +32,11 @@ body {
     cursor: not-allowed;
     opacity: 0.55;
   }
+
+  input[type='radio'],
+  input[type='checkbox'] {
+    accent-color: #800020;
+  }
 }
 
 @layer components {
@@ -49,13 +54,13 @@ body {
   /* These selectors cover the existing Tailwind button styles consistently. */
   :is(button, a)[class*='bg-maroon-'] {
     color: #fff;
-    text-shadow: 0 1px 1px rgba(74, 14, 23, 0.25);
-    box-shadow: 0 5px 14px -7px rgba(74, 14, 23, 0.72);
+    text-shadow: none;
+    box-shadow: none;
   }
 
   :is(button, a)[class*='bg-maroon-']:not(:disabled):hover {
-    filter: brightness(1.08) saturate(1.04);
-    box-shadow: 0 10px 20px -10px rgba(74, 14, 23, 0.75);
+    filter: brightness(1.04);
+    box-shadow: none;
   }
 
   :is(button, a)[class*='border-maroon-']:not([class*='bg-maroon-']) {
@@ -136,4 +141,14 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Keep affirmative interface feedback inside the maroon/pink brand system. */
+.text-green-600,
+.text-green-700 {
+  color: #cf1454 !important;
+}
+.bg-green-100,
+.bg-green-150 {
+  background-color: #fff0f3 !important;
 }
