@@ -2,11 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { BarChart3, LayoutDashboard, Package, ShoppingBag, Tags } from 'lucide-react';
+import { BarChart3, LayoutDashboard, Package, ShoppingBag, Star, Tags } from 'lucide-react';
 import { useEffect } from 'react';
 import { useAuth } from '@/context/AuthProvider';
 
-const links = [{ href: '/admin', label: 'Dashboard', icon: LayoutDashboard }, { href: '/admin/products', label: 'Products', icon: Package }, { href: '/admin/categories', label: 'Categories', icon: Tags }, { href: '/admin/orders', label: 'Orders', icon: ShoppingBag }, { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 }];
+const links = [{ href: '/admin', label: 'Dashboard', icon: LayoutDashboard }, { href: '/admin/products', label: 'Products', icon: Package }, { href: '/admin/featured', label: 'Featured', icon: Star }, { href: '/admin/categories', label: 'Categories', icon: Tags }, { href: '/admin/orders', label: 'Orders', icon: ShoppingBag }, { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 }];
 export default function AdminShell({ title, children }: { title: string; children: React.ReactNode }) {
   const { user, status } = useAuth(); const router = useRouter(); const pathname = usePathname();
   useEffect(() => { if (status !== 'loading' && user?.role !== 'admin') router.replace('/?unauthorized=1'); }, [router, status, user?.role]);

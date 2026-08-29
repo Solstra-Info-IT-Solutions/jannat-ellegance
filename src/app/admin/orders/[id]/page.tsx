@@ -14,7 +14,7 @@ type Order = {
   shippingInfo: Shipping; adminNotes?: string; cancelReason?: string; createdAt: string;
 };
 
-const statuses = ['confirmed', 'processing', 'packed', 'shipped', 'in_transit', 'out_for_delivery', 'delivered', 'cancelled'];
+const statuses = ['confirmed', 'processing', 'packed', 'shipped', 'in_transit', 'out_for_delivery', 'delivered', 'cancelled', 'returned', 'exchanged'];
 const couriers = ['DTDC', 'Delhivery', 'Blue Dart', 'India Post', 'Other'];
 const label = (value: string) => value.replace(/_/g, ' ').replace(/\b\w/g, (character) => character.toUpperCase());
 const validTrackingUrl = (value: string) => {
@@ -93,7 +93,7 @@ export default function AdminOrderDetailPage() {
         <label className="block text-xs font-bold uppercase text-maroon-900">Tracking number<input value={trackingNumber} onChange={(event) => setTrackingNumber(event.target.value)} placeholder="D123456789" className="mt-1.5 w-full rounded-xl border border-maroon-100 p-3 text-sm font-normal" /></label>
         <label className="block text-xs font-bold uppercase text-maroon-900">Tracking URL <span className="normal-case text-gray-500">(optional)</span><input type="url" value={trackingUrl} onChange={(event) => setTrackingUrl(event.target.value)} placeholder="https://…" className="mt-1.5 w-full rounded-xl border border-maroon-100 p-3 text-sm font-normal" /></label>
         {validTrackingUrl(trackingUrl) && <a href={trackingUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-bold text-maroon-800"><ExternalLink size={13} />Open tracking link</a>}
-        {status === 'cancelled' && <label className="block text-xs font-bold uppercase text-maroon-900">Cancellation reason<textarea required value={cancelReason} onChange={(event) => setCancelReason(event.target.value)} className="mt-1.5 min-h-24 w-full rounded-xl border border-maroon-100 p-3 text-sm font-normal" /></label>}
+        {status === 'cancelled' && <label className="block text-xs font-bold uppercase text-maroon-900">Cancellation reason <span className="normal-case text-gray-500">(optional)</span><textarea value={cancelReason} onChange={(event) => setCancelReason(event.target.value)} placeholder="Reason for internal records" className="mt-1.5 min-h-24 w-full rounded-xl border border-maroon-100 p-3 text-sm font-normal" /></label>}
         <label className="block text-xs font-bold uppercase text-maroon-900">Admin notes<textarea value={notes} onChange={(event) => setNotes(event.target.value)} className="mt-1.5 min-h-24 w-full rounded-xl border border-maroon-100 p-3 text-sm font-normal" /></label>
         <label className="flex items-center gap-2 text-sm font-semibold text-maroon-900"><input type="checkbox" checked={sendEmail} onChange={(event) => setSendEmail(event.target.checked)} />Send status update email to customer</label>
         <button disabled={saving} className="w-full rounded-full bg-maroon-800 py-3 text-xs font-bold uppercase tracking-wider text-white disabled:opacity-50">{saving ? 'Updating…' : 'Update order'}</button>
