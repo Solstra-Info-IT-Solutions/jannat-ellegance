@@ -2,7 +2,7 @@ export type ProductSize = { size: 'S' | 'M' | 'L' | 'XL' | 'XXL'; stock: number;
 
 export interface Product {
   id: string; name: string; category: string; categoryId: string; price: number; discount: number;
-  discountType: 'percentage' | 'flat'; isOnSale: boolean; description: string; sizes: ProductSize[];
+  discountType: 'percentage' | 'flat'; isOnSale: boolean; isFeatured?: boolean; description: string; sizes: ProductSize[];
   imageUrls: string[]; metaTitle?: string; metaDescription?: string; oldPrice?: number;
   salePrice?: number;
 }

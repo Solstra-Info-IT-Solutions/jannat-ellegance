@@ -48,6 +48,7 @@ export default function AdminProductsPage() {
     <div className="mb-5 flex flex-col gap-3 sm:flex-row">
       <div className="relative flex-1"><Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-maroon-700" /><input value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} placeholder="Search products" className="w-full rounded-full border border-maroon-100 bg-white py-3 pl-10 pr-4 text-sm" /></div>
       <select value={category} onChange={(event) => { setCategory(event.target.value); setPage(1); }} className="rounded-full border border-maroon-100 bg-white px-4 text-sm"><option value="">All categories</option>{categories.map((item) => <option key={item._id} value={item._id}>{item.name}</option>)}</select>
+      <Link href="/admin/categories" className="inline-flex items-center justify-center rounded-full border border-pink-200 bg-pink-50 px-5 py-3 text-xs font-bold uppercase tracking-wider text-maroon-850">Manage categories</Link>
       <Link href="/admin/products/new" className="inline-flex items-center justify-center gap-2 rounded-full bg-maroon-800 px-5 py-3 text-xs font-bold uppercase tracking-wider text-white"><Plus size={16} />Add product</Link>
     </div>
     {error && <p className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}
