@@ -39,10 +39,10 @@ function ShopContent() {
   }, []);
 
   const filtered = useMemo(() => products.filter((product) => {
-    const categoryMatch = (!category && !categoryFromLink)
-      || product.categoryId === category
-      || product.categoryId === categoryFromLink
-      || product.category.toLowerCase() === categoryFromLink.toLowerCase();
+    const activeCategory = category || categoryFromLink;
+    const categoryMatch = !activeCategory
+      || product.categoryId === activeCategory
+      || product.category.toLowerCase() === activeCategory.toLowerCase();
     const matchesText = !search || `${product.name} ${product.description} ${product.category}`.toLowerCase().includes(search.toLowerCase());
     const matchesSize = !selectedSizes.length || product.sizes.some((item) => selectedSizes.includes(item.size) && item.stock > 0);
     return categoryMatch && matchesText && matchesSize && (!wishlistOnly || wishlistedIds.has(product.id));

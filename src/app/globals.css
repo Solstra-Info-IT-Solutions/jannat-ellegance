@@ -35,6 +35,17 @@ body {
 }
 
 @layer components {
+  /* Existing button and menu links use solid brand color instead of gradients. */
+  :is(button, a)[class*='bg-gradient-to-r'] {
+    background-image: none;
+    background-color: #800020;
+    border-color: #800020;
+  }
+
+  :is(button, a)[class*='bg-gradient-to-r']:not(:disabled):hover {
+    background-color: #5d0b1d;
+  }
+
   /* These selectors cover the existing Tailwind button styles consistently. */
   :is(button, a)[class*='bg-maroon-'] {
     color: #fff;
