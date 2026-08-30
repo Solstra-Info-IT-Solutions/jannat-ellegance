@@ -37,7 +37,7 @@ const Footer: React.FC = () => {
                 <Instagram size={18} />
               </a>
               <a
-                href="https://www.facebook.com/share/19NkbGzdxc/"
+                href="https://www.facebook.com/profile.php?id=61592768348073"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
