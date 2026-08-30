@@ -170,3 +170,21 @@ body {
 .bg-green-150 {
   background-color: #fff0f3 !important;
 }
+
+@keyframes loader-progress {
+0% {
+transform: translateX(-120%);
+}
+
+50% {
+transform: translateX(100%);
+}
+
+100% {
+transform: translateX(220%);
+}
+}
+
+.loader-progress {
+animation: loader-progress 1.4s ease-in-out infinite;
+}
