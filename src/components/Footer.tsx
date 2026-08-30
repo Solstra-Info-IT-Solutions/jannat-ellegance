@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { MapPin, Phone, Mail, Instagram, Facebook, Youtube, Compass } from 'lucide-react';
 
 const Footer: React.FC = () => {
@@ -15,12 +16,23 @@ const Footer: React.FC = () => {
           
           {/* Brand & Social Links */}
           <div className="flex flex-col">
-            <h2 className="font-serif text-3xl tracking-wide text-white">
-              JANNAT
-            </h2>
-            <p className="text-pink-300 text-xs tracking-[5px] mt-1 uppercase">
-              Elegance
-            </p>
+            <div className="flex items-center gap-3">
+              <Image
+                src="/images/logo.png"
+                alt="Jannat Elegance Logo"
+                width={44}
+                height={44}
+                className="object-contain shrink-0"
+              />
+              <div>
+                <h2 className="font-serif text-3xl tracking-wide text-white leading-none">
+                  JANNAT
+                </h2>
+                <p className="text-pink-300 text-xs tracking-[5px] mt-1 uppercase">
+                  Elegance
+                </p>
+              </div>
+            </div>
             <p className="text-pink-100/80 leading-7 mt-5 text-sm">
               Timeless Indian fashion designed to celebrate femininity, heritage, and contemporary elegance. Made for the queen within you.
             </p>
