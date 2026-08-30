@@ -138,20 +138,20 @@ const Footer: React.FC = () => {
               <div className="flex items-start gap-3">
                 <MapPin size={18} className="mt-0.5 shrink-0 text-pink-300" />
                 <span className="text-pink-100/80 leading-6">
-                  Jannat Elegance, Noida, India
+                  JANNAT ELEGANCE, Noida, India
                 </span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone size={18} className="text-pink-300 shrink-0" />
-                <span className="text-pink-100/80">
+                <a href="tel:+918810330687" className="text-pink-100/80 hover:text-pink-300 transition">
                   +91 88103 30687
-                </span>
+                </a>
               </div>
               <div className="flex items-center gap-3">
                 <Mail size={18} className="text-pink-300 shrink-0" />
-                <span className="text-pink-100/80 truncate">
+                <a href="mailto:jannatelegance05@gmail.com" className="text-pink-100/80 hover:text-pink-300 transition">
                   jannatelegance05@gmail.com
-                </span>
+                </a>
               </div>
             </div>
           </div>
