@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
             {/* Social Media Links */}
             <div className="flex gap-3 mt-6">
               <a
-                href="https://instagram.com/jannatelegance"
+                href="https://www.instagram.com/jannat.elegance?igsi=MTV1NHo2aXdwYWppaA=="
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -37,7 +37,7 @@ const Footer: React.FC = () => {
                 <Instagram size={18} />
               </a>
               <a
-                href="https://facebook.com/jannatelegance"
+                href="https://www.facebook.com/share/19NkbGzdxc/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
@@ -45,7 +45,7 @@ const Footer: React.FC = () => {
               >
                 <Facebook size={18} />
               </a>
-              <a
+              {/* <a
                 href="https://youtube.com/jannatelegance"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -62,7 +62,7 @@ const Footer: React.FC = () => {
                 className="w-9 h-9 rounded-full bg-white/10 hover:bg-red-700 transition flex items-center justify-center text-pink-200 hover:text-white"
               >
                 <Compass size={18} />
-              </a>
+              </a> */}
             </div>
           </div>
 
@@ -138,7 +138,7 @@ const Footer: React.FC = () => {
               <div className="flex items-start gap-3">
                 <MapPin size={18} className="mt-0.5 shrink-0 text-pink-300" />
                 <span className="text-pink-100/80 leading-6">
-                  Jannat Elegance Boutique, New Delhi, 110025, India
+                  Jannat Elegance, Noida, India
                 </span>
               </div>
               <div className="flex items-center gap-3">
@@ -150,7 +150,7 @@ const Footer: React.FC = () => {
               <div className="flex items-center gap-3">
                 <Mail size={18} className="text-pink-300 shrink-0" />
                 <span className="text-pink-100/80 truncate">
-                  support@jannatelegance.com
+                  jannatelegance05@gmail.com
                 </span>
               </div>
             </div>
