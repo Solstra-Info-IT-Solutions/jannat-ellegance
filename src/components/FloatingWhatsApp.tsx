@@ -13,7 +13,7 @@ const FloatingWhatsApp: React.FC = () => {
       href={waUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="group fixed bottom-6 right-6 z-40 grid h-16 w-16 place-items-center rounded-full border-2 border-pink-300 bg-white p-1 shadow-[0_8px_20px_rgba(74,14,23,.24)] transition-transform hover:scale-105 focus-visible:outline-none"
+      className="group fixed bottom-24 right-6 z-40 grid h-16 w-16 place-items-center rounded-full border-2 border-pink-300 bg-white p-1 shadow-[0_8px_20px_rgba(74,14,23,.24)] transition-transform hover:scale-105 focus-visible:outline-none"
       title="Chat with Jannat Elegance"
       aria-label="Chat on WhatsApp"
     >
