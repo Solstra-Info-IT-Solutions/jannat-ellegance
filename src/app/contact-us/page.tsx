@@ -113,7 +113,7 @@ export default function ContactPage() {
 
   return (
     <main className="min-h-screen bg-[#fff8fa] py-12 sm:py-16 font-sans">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <button
           onClick={() => router.back()}
           className="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-maroon-800 transition mb-8"
@@ -132,7 +132,7 @@ export default function ContactPage() {
           </div>
 
           {/* Contact Info */}
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-xs sm:text-sm">
             <a
               href="https://www.google.com/maps?q=28.57,77.32"
               target="_blank"
