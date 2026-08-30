@@ -155,6 +155,7 @@ export default function ContactPage() {
                   jannatelegance05@gmail.com
                 </a>
               </div>
+            </div>
           </div>
 
           {/* Success Message */}
