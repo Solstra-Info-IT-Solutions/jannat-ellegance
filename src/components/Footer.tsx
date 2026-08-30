@@ -103,9 +103,14 @@ const Footer: React.FC = () => {
           {/* Quick Customer Care */}
           <div>
             <h3 className="font-serif text-lg text-white mb-6 font-medium">
-              Information
+              Customer Care
             </h3>
             <ul className="space-y-3.5 text-sm">
+              <li>
+                <Link href="/#contact-us" className="text-pink-100/80 hover:text-pink-300 transition">
+                  Contact Us
+                </Link>
+              </li>
               <li>
                 <Link href="/#about" className="text-pink-100/80 hover:text-pink-300 transition">
                   Our Story
