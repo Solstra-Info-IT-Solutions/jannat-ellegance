@@ -6,6 +6,7 @@ import CategorySection from '@/components/CategorySection';
 import CategorySlider from '@/components/CategorySlider';
 import AboutSection from '@/components/AboutSection';
 import ProductCard from '@/components/ProductCard';
+import Testimonials from '@/components/Testimonials';
 import ExploreColors from '@/components/ExploreColors';
 import { Product } from '@/types';
 
@@ -47,6 +48,7 @@ function HomeContent() {
       </section>
       <ExploreColors />
       <AboutSection />
+      <Testimonials/>
     </main>
   );
 }
