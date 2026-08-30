@@ -107,7 +107,7 @@ const Footer: React.FC = () => {
             </h3>
             <ul className="space-y-3.5 text-sm">
               <li>
-                <Link href="/#contact-us" className="text-pink-100/80 hover:text-pink-300 transition">
+                <Link href="/contact-us" className="text-pink-100/80 hover:text-pink-300 transition">
                   Contact Us
                 </Link>
               </li>
