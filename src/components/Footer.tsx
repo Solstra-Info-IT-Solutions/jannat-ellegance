@@ -138,7 +138,7 @@ const Footer: React.FC = () => {
               <div className="flex items-start gap-3">
                 <MapPin size={18} className="mt-0.5 shrink-0 text-pink-300" />
                 <a
-                  href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=28.57%2C77.32&hl=en"
+                  href="https://www.google.com/maps?q=28.57,77.32"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-pink-100/80 hover:text-pink-300 transition-colors">
