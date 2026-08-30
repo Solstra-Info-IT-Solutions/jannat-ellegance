@@ -112,63 +112,57 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#4a0e17] py-12 sm:py-16 font-sans">
+    <main className="min-h-screen bg-[#fff8fa] py-12 sm:py-16 font-sans">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 text-sm font-semibold text-pink-100/70 hover:text-pink-300 transition mb-8"
+          className="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-maroon-800 transition mb-8"
         >
           <ArrowLeft size={16} /> Back
         </button>
 
-        <article className="bg-[#5a1420] rounded-[32px] border border-pink-100/10 p-8 sm:p-12 shadow-xl space-y-8 text-pink-100/90">
-          <div className="border-b border-pink-100/10 pb-4">
-            <h1 className="font-serif text-3xl sm:text-4xl text-white font-normal">
+        <article className="bg-white rounded-[32px] border border-maroon-100 p-8 sm:p-12 shadow-sm space-y-8 text-gray-700">
+          <div className="border-b border-maroon-100 pb-4">
+            <h1 className="font-serif text-3xl sm:text-4xl text-maroon-950 font-normal">
               Contact Us
             </h1>
-            <p className="text-xs text-pink-100/50 mt-2">
+            <p className="text-xs text-gray-400 mt-2">
               We&apos;d love to hear from you
             </p>
           </div>
 
           {/* Contact Info */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-            <div className="flex items-start gap-3">
-              <MapPin size={18} className="mt-0.5 shrink-0 text-pink-300" />
-              <a
-                href="https://www.google.com/maps?q=28.57,77.32"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-pink-100/80 hover:text-pink-300 transition-colors"
-              >
-                JANNAT ELEGANCE, Noida, India
-              </a>
-            </div>
+            <a
+              href="https://www.google.com/maps?q=28.57,77.32"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-start gap-3 text-gray-600 hover:text-maroon-800 transition-colors"
+            >
+              <MapPin size={18} className="mt-0.5 shrink-0 text-maroon-800" />
+              <span>JANNAT ELEGANCE, Noida, India</span>
+            </a>
 
-            <div className="flex items-center gap-3">
-              <Phone size={18} className="text-pink-300 shrink-0" />
-              <a
-                href="tel:+918810330687"
-                className="text-pink-100/80 hover:text-pink-300 transition"
-              >
-                +91 88103 30687
-              </a>
-            </div>
+            <a
+              href="tel:+918810330687"
+              className="flex items-center gap-3 text-gray-600 hover:text-maroon-800 transition-colors"
+            >
+              <Phone size={18} className="text-maroon-800 shrink-0" />
+              <span>+91 88103 30687</span>
+            </a>
 
-            <div className="flex items-center gap-3">
-              <Mail size={18} className="text-pink-300 shrink-0" />
-              <a
-                href="mailto:jannatelegance05@gmail.com"
-                className="text-pink-100/80 hover:text-pink-300 transition"
-              >
-                jannatelegance05@gmail.com
-              </a>
-            </div>
+            <a
+              href="mailto:jannatelegance05@gmail.com"
+              className="flex items-center gap-3 text-gray-600 hover:text-maroon-800 transition-colors"
+            >
+              <Mail size={18} className="text-maroon-800 shrink-0" />
+              <span>jannatelegance05@gmail.com</span>
+            </a>
           </div>
 
           {/* Success Message */}
           {submitStatus === 'success' && (
-            <div className="flex items-center gap-2 bg-green-500/10 border border-green-400/30 text-green-300 text-sm font-medium px-4 py-3 rounded-2xl">
+            <div className="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-sm font-medium px-4 py-3 rounded-2xl">
               <CheckCircle2 size={18} />
               Thank you! Your message has been sent successfully.
             </div>
@@ -176,7 +170,7 @@ export default function ContactPage() {
 
           {/* Error Message */}
           {submitStatus === 'error' && (
-            <div className="bg-red-500/10 border border-red-400/30 text-red-300 text-sm font-medium px-4 py-3 rounded-2xl">
+            <div className="bg-red-50 border border-red-200 text-red-700 text-sm font-medium px-4 py-3 rounded-2xl">
               Something went wrong. Please try again later.
             </div>
           )}
@@ -186,7 +180,7 @@ export default function ContactPage() {
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-semibold text-white mb-2"
+                className="block text-sm font-semibold text-maroon-950 mb-2"
               >
                 Full Name
               </label>
@@ -197,19 +191,19 @@ export default function ContactPage() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Your full name"
-                className={`w-full rounded-2xl border bg-white/5 px-4 py-3 text-sm text-white placeholder:text-pink-100/30 outline-none transition focus:ring-2 focus:ring-pink-300/50 ${
-                  errors.name ? 'border-red-400/60' : 'border-pink-100/20'
+                className={`w-full rounded-2xl border px-4 py-3 text-sm text-gray-700 outline-none transition focus:ring-2 focus:ring-maroon-200 ${
+                  errors.name ? 'border-red-400' : 'border-maroon-100'
                 }`}
               />
               {errors.name && (
-                <p className="text-xs text-red-300 mt-1.5">{errors.name}</p>
+                <p className="text-xs text-red-500 mt-1.5">{errors.name}</p>
               )}
             </div>
 
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-semibold text-white mb-2"
+                className="block text-sm font-semibold text-maroon-950 mb-2"
               >
                 Email Address
               </label>
@@ -220,21 +214,21 @@ export default function ContactPage() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
-                className={`w-full rounded-2xl border bg-white/5 px-4 py-3 text-sm text-white placeholder:text-pink-100/30 outline-none transition focus:ring-2 focus:ring-pink-300/50 ${
-                  errors.email ? 'border-red-400/60' : 'border-pink-100/20'
+                className={`w-full rounded-2xl border px-4 py-3 text-sm text-gray-700 outline-none transition focus:ring-2 focus:ring-maroon-200 ${
+                  errors.email ? 'border-red-400' : 'border-maroon-100'
                 }`}
               />
               {errors.email && (
-                <p className="text-xs text-red-300 mt-1.5">{errors.email}</p>
+                <p className="text-xs text-red-500 mt-1.5">{errors.email}</p>
               )}
             </div>
 
             <div>
               <label
                 htmlFor="phone"
-                className="block text-sm font-semibold text-white mb-2"
+                className="block text-sm font-semibold text-maroon-950 mb-2"
               >
-                Phone Number <span className="text-pink-100/40 font-normal">(optional)</span>
+                Phone Number <span className="text-gray-400 font-normal">(optional)</span>
               </label>
               <input
                 type="tel"
@@ -243,19 +237,19 @@ export default function ContactPage() {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="98765 43210"
-                className={`w-full rounded-2xl border bg-white/5 px-4 py-3 text-sm text-white placeholder:text-pink-100/30 outline-none transition focus:ring-2 focus:ring-pink-300/50 ${
-                  errors.phone ? 'border-red-400/60' : 'border-pink-100/20'
+                className={`w-full rounded-2xl border px-4 py-3 text-sm text-gray-700 outline-none transition focus:ring-2 focus:ring-maroon-200 ${
+                  errors.phone ? 'border-red-400' : 'border-maroon-100'
                 }`}
               />
               {errors.phone && (
-                <p className="text-xs text-red-300 mt-1.5">{errors.phone}</p>
+                <p className="text-xs text-red-500 mt-1.5">{errors.phone}</p>
               )}
             </div>
 
             <div>
               <label
                 htmlFor="message"
-                className="block text-sm font-semibold text-white mb-2"
+                className="block text-sm font-semibold text-maroon-950 mb-2"
               >
                 Message
               </label>
@@ -266,17 +260,17 @@ export default function ContactPage() {
                 value={formData.message}
                 onChange={handleChange}
                 placeholder="Tell us how we can help you..."
-                className={`w-full rounded-2xl border bg-white/5 px-4 py-3 text-sm text-white placeholder:text-pink-100/30 outline-none transition resize-none focus:ring-2 focus:ring-pink-300/50 ${
-                  errors.message ? 'border-red-400/60' : 'border-pink-100/20'
+                className={`w-full rounded-2xl border px-4 py-3 text-sm text-gray-700 outline-none transition resize-none focus:ring-2 focus:ring-maroon-200 ${
+                  errors.message ? 'border-red-400' : 'border-maroon-100'
                 }`}
               />
               <div className="flex justify-between items-center mt-1.5">
                 {errors.message ? (
-                  <p className="text-xs text-red-300">{errors.message}</p>
+                  <p className="text-xs text-red-500">{errors.message}</p>
                 ) : (
                   <span />
                 )}
-                <p className="text-xs text-pink-100/40">
+                <p className="text-xs text-gray-400">
                   {formData.message.length}/1000
                 </p>
               </div>
@@ -285,7 +279,7 @@ export default function ContactPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full flex items-center justify-center gap-2 bg-[#fff8fa] text-[#4a0e17] font-semibold text-sm uppercase tracking-wider px-8 py-4 rounded-2xl shadow-md hover:bg-pink-100 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 bg-maroon-950 text-white font-semibold text-sm uppercase tracking-wider px-8 py-4 rounded-2xl shadow-md hover:bg-maroon-800 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {submitting ? (
                 <>
