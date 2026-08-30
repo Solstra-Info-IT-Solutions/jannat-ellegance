@@ -11,6 +11,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
 import FloatingWhatsApp from '@/components/FloatingWhatsApp';
+import QuickHelp from '@/components/QuickHelp'
 import Loader from '@/components/Loader';
 
 import { Toaster } from 'react-hot-toast';
@@ -81,6 +82,7 @@ className={`${inter.variable} ${cormorant.variable}`}
 
         {/* WhatsApp Floating Button */}
         <FloatingWhatsApp />
+        <QuickHelp/>
 
       </CartProvider>
     </AuthProvider>
