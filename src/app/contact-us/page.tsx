@@ -133,29 +133,28 @@ export default function ContactPage() {
 
           {/* Contact Info */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-            <a
-              href="https://www.google.com/maps?q=28.57,77.32"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-start gap-3 text-pink-100/80 hover:text-pink-300 transition-colors"
-            >
-              <MapPin size={18} className="mt-0.5 shrink-0 text-pink-300" />
-              <span>JANNAT ELEGANCE, Noida, India</span>
-            </a>
-            <a
-              href="tel:+918810330687"
-              className="flex items-center gap-3 text-pink-100/80 hover:text-pink-300 transition"
-            >
-              <Phone size={18} className="text-pink-300 shrink-0" />
-              <span>+91 88103 30687</span>
-            </a>
-            <a
-              href="mailto:jannatelegance05@gmail.com"
-              className="flex items-center gap-3 text-pink-100/80 hover:text-pink-300 transition"
-            >
-              <Mail size={18} className="text-pink-300 shrink-0" />
-              <span>jannatelegance05@gmail.com</span>
-            </a>
+            <div className="flex items-start gap-3">
+                <MapPin size={18} className="mt-0.5 shrink-0 text-pink-300" />
+                <a
+                  href="https://www.google.com/maps?q=28.57,77.32"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-pink-100/80 hover:text-pink-300 transition-colors">
+                  JANNAT ELEGANCE, Noida, India
+                </a>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone size={18} className="text-pink-300 shrink-0" />
+                <a href="tel:+918810330687" className="text-pink-100/80 hover:text-pink-300 transition">
+                  +91 88103 30687
+                </a>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail size={18} className="text-pink-300 shrink-0" />
+                <a href="mailto:jannatelegance05@gmail.com" className="text-pink-100/80 hover:text-pink-300 transition">
+                  jannatelegance05@gmail.com
+                </a>
+              </div>
           </div>
 
           {/* Success Message */}
