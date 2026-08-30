@@ -133,49 +133,119 @@ setError('');
 setOrder(null);
 setSearched(true);
 
+// try {
+//   /*
+//     BACKEND API CONNECTION
+
+//     Recommended API:
+
+//     GET /api/orders/track?orderId=YOUR_ORDER_ID
+
+//     Expected response:
+
+//     {
+//       order: {
+//         ...
+//       }
+//     }
+//   */
+
+//   const response = await fetch(
+//     `/api/orders/track?orderId=${encodeURIComponent(
+//       trimmedOrderId
+//     )}`,
+//     {
+//       credentials: 'include',
+//       cache: 'no-store',
+//     }
+//   );
+
+//   const data = await response.json();
+
+//   if (!response.ok || !data?.order) {
+//     setError(
+//       data?.error ||
+//         'We could not find an order with this Order ID.'
+//     );
+
+//     return;
+//   }
+
+//   setOrder(data.order);
+// } catch {
+//   setError(
+//     'Something went wrong while tracking your order. Please try again.'
+//   );
+// } finally {
+//   setLoading(false);
+// }
+
 try {
-  /*
-    BACKEND API CONNECTION
+  // Demo loading effect
+  await new Promise((resolve) => setTimeout(resolve, 1200));
 
-    Recommended API:
+  // Temporary dummy order data
+  setOrder({
+    id: trimmedOrderId.replace(/^JE/i, '') || '12345678',
 
-    GET /api/orders/track?orderId=YOUR_ORDER_ID
+    createdAt: '2026-08-25T10:30:00.000Z',
 
-    Expected response:
+    customerName: 'Customer',
 
-    {
-      order: {
-        ...
-      }
-    }
-  */
+    customerPhone: '+91 9876543210',
 
-  const response = await fetch(
-    `/api/orders/track?orderId=${encodeURIComponent(
-      trimmedOrderId
-    )}`,
-    {
-      credentials: 'include',
-      cache: 'no-store',
-    }
-  );
+    status: 'in_transit',
 
-  const data = await response.json();
+    total: 4999,
 
-  if (!response.ok || !data?.order) {
-    setError(
-      data?.error ||
-        'We could not find an order with this Order ID.'
-    );
+    items: [
+      {
+        id: 'item-1',
+        name: 'Premium Embroidered Sharara Suit',
+        quantity: 1,
+        size: 'M',
+      },
+      {
+        id: 'item-2',
+        name: 'Designer Dupatta',
+        quantity: 1,
+        size: 'Free Size',
+      },
+    ],
 
-    return;
-  }
+    shippingInfo: {
+      courierName: 'DTDC Express',
 
-  setOrder(data.order);
+      trackingNumber: 'D123456789',
+
+      trackingUrl: '#',
+    },
+
+    statusHistory: [
+      {
+        status: 'confirmed',
+        changedAt: '2026-08-25T10:30:00.000Z',
+      },
+      {
+        status: 'processing',
+        changedAt: '2026-08-25T14:00:00.000Z',
+      },
+      {
+        status: 'packed',
+        changedAt: '2026-08-26T09:30:00.000Z',
+      },
+      {
+        status: 'shipped',
+        changedAt: '2026-08-26T18:00:00.000Z',
+      },
+      {
+        status: 'in_transit',
+        changedAt: '2026-08-27T11:30:00.000Z',
+      },
+    ],
+  });
 } catch {
-  setError(
-    'Something went wrong while tracking your order. Please try again.'
-  );
+  setError('Something went wrong. Please try again.');
 } finally {
   setLoading(false);
 }
