@@ -28,6 +28,10 @@ export const metadata: Metadata = {
   title: 'Jannat Elegance | Premium Indian Ethnic Wear',
   description: 'Jannat Elegance offers a curated collection of luxury Indian ethnic wear including Sharara Suits, Garara Suits, Pant Suits, Farshi Shalwar Suits, Frock Suits, Gowns, and Lehngas. Crafted for the modern queen.',
   keywords: 'Jannat Elegance, ethnic wear, Indian fashion, Sharara Suit, Garara Suit, Pant Suit, Farshi Shalwar, Frock Suit, Gown, Lehnga, Plazo Suit',
+   icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
 };
 
 export default function RootLayout({
