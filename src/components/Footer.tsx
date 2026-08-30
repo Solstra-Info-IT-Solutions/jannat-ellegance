@@ -18,7 +18,7 @@ const Footer: React.FC = () => {
           <div className="flex flex-col">
             <div className="flex items-center gap-3">
               <Image
-                src="/images/logo.png"
+                src="/images/logo.jpeg"
                 alt="Jannat Elegance Logo"
                 width={44}
                 height={44}
