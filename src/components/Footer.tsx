@@ -137,9 +137,13 @@ const Footer: React.FC = () => {
             <div className="space-y-3 text-sm">
               <div className="flex items-start gap-3">
                 <MapPin size={18} className="mt-0.5 shrink-0 text-pink-300" />
-                <span className="text-pink-100/80 leading-6">
+                <a
+                  href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=28.57%2C77.32&hl=en"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-pink-100/80 hover:text-pink-300 transition-colors">
                   JANNAT ELEGANCE, Noida, India
-                </span>
+                </a>
               </div>
               <div className="flex items-center gap-3">
                 <Phone size={18} className="text-pink-300 shrink-0" />
