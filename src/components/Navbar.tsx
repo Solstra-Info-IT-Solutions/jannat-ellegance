@@ -233,6 +233,13 @@ const Navbar: React.FC = () => {
                           <Package size={14} /> My Orders
                         </Link>
                         <Link
+                          href="/track-order"
+                          onClick={() => setAuthDropdownOpen(false)}
+                          className="flex w-full items-center gap-2 rounded-lg border border-pink-200 bg-pink-50 px-3 py-2 text-xs font-bold uppercase tracking-wide text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
+                        >
+                          <Package size={14} /> Track My Order
+                        </Link>
+                        <Link
                           href="/shop?wishlist=true"
                           onClick={() => setAuthDropdownOpen(false)}
                           className="flex w-full items-center gap-2 rounded-lg border border-pink-200 bg-pink-50 px-3 py-2 text-xs font-bold uppercase tracking-wide text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
