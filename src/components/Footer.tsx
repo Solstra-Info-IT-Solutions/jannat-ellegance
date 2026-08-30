@@ -17,13 +17,14 @@ const Footer: React.FC = () => {
           {/* Brand & Social Links */}
           <div className="flex flex-col">
             <div className="flex items-center gap-3">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 border-maroon-200 shadow-sm transition-transform duration-300 group-hover:scale-105 shrink-0 relative">
               <Image
                 src="/images/logo.jpeg"
                 alt="Jannat Elegance Logo"
-                width={44}
-                height={44}
-                className="object-contain shrink-0"
+                fill
+                className="object-cover"
               />
+            </div>
               <div>
                 <h2 className="font-serif text-3xl tracking-wide text-white leading-none">
                   JANNAT
