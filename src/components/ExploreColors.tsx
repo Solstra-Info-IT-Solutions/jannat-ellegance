@@ -1,14 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import imageOne from "../assets/imageone.jpeg";
-import imageTwo from "../assets/imagetwo.jpeg";
-import imageThree from "../assets/imagethree.jpeg";
 
 const ExploreColors = () => {
   const colorCards = [
-    { id: 1, image: imageOne, alt: "Rose Pink Collection", link: "/shop" },
-    { id: 2, image: imageTwo, alt: "Royal Maroon Collection", link: "/shop" },
-    { id: 3, image: imageThree, alt: "Blush Pink Collection", link: "/shop" },
+    { id: 1, image: "/images/imageone.jpeg", alt: "Rose Pink Collection", link: "/shop" },
+    { id: 2, image: "/images/imagetwo.jpeg", alt: "Royal Maroon Collection", link: "/shop" },
+    { id: 3, image: "/images/imagethree.jpeg", alt: "Blush Pink Collection", link: "/shop" },
   ];
 
   return (
@@ -43,7 +40,6 @@ const ExploreColors = () => {
                 idx % 2 === 1 ? "-translate-y-2 sm:-translate-y-4" : ""
               }`}
             >
-              {/* Background Accent Border Layer */}
               <div className="absolute inset-0 border-2 border-[#fce7f3]/30 pointer-events-none z-10 group-hover:border-[#fff8fa] transition-colors duration-300" />
               
               <Image
@@ -54,7 +50,6 @@ const ExploreColors = () => {
                 className="object-cover object-top group-hover:scale-110 transition-transform duration-700"
               />
               
-              {/* Subtle Dark Overlay on Hover */}
               <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300" />
             </Link>
           ))}
