@@ -132,20 +132,20 @@ export default function ContactPage() {
           </div>
 
           {/* Contact Info */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm">
             <a
               href="https://www.google.com/maps?q=28.57,77.32"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-start gap-3 text-gray-600 hover:text-maroon-800 transition-colors"
+              className="flex items-center gap-2 text-gray-600 hover:text-maroon-800 transition-colors whitespace-nowrap"
             >
-              <MapPin size={18} className="mt-0.5 shrink-0 text-maroon-800" />
+              <MapPin size={18} className="shrink-0 text-maroon-800" />
               <span>JANNAT ELEGANCE, Noida, India</span>
             </a>
 
             <a
               href="tel:+918810330687"
-              className="flex items-center gap-3 text-gray-600 hover:text-maroon-800 transition-colors"
+              className="flex items-center gap-2 text-gray-600 hover:text-maroon-800 transition-colors whitespace-nowrap"
             >
               <Phone size={18} className="text-maroon-800 shrink-0" />
               <span>+91 88103 30687</span>
@@ -153,7 +153,7 @@ export default function ContactPage() {
 
             <a
               href="mailto:jannatelegance05@gmail.com"
-              className="flex items-center gap-3 text-gray-600 hover:text-maroon-800 transition-colors"
+              className="flex items-center gap-2 text-gray-600 hover:text-maroon-800 transition-colors whitespace-nowrap"
             >
               <Mail size={18} className="text-maroon-800 shrink-0" />
               <span>jannatelegance05@gmail.com</span>
