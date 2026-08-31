@@ -1,7 +1,6 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-
 import {
   CheckCircle2,
   Loader2,
@@ -9,7 +8,6 @@ import {
   Star,
   X,
 } from 'lucide-react';
-
 import toast from 'react-hot-toast';
 
 type ReviewFormProps = {
@@ -31,8 +29,6 @@ export default function ReviewForm({
   ) => {
     event.preventDefault();
 
-    if (loading) return;
-
     if (rating === 0) {
       toast.error('Please select a star rating.');
       return;
@@ -46,21 +42,34 @@ export default function ReviewForm({
     setLoading(true);
 
     try {
-      const response = await fetch('/api/testimonials', {
-        method: 'POST',
+      /*
+        IMPORTANT:
 
-        credentials: 'include',
+        Agar Next.js me backend rewrite configured hai,
+        for example:
 
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        /api/testimonials -> backend
 
-        body: JSON.stringify({
-          productName,
-          rating,
-          comment: comment.trim(),
-        }),
-      });
+        to ye URL correct hai.
+      */
+
+      const response = await fetch(
+        '/api/testimonials',
+        {
+          method: 'POST',
+
+          credentials: 'include',
+
+          headers: {
+            'Content-Type': 'application/json',
+          },
+
+          body: JSON.stringify({
+            rating,
+            message: comment.trim(),
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -83,7 +92,7 @@ export default function ReviewForm({
 
       setTimeout(() => {
         onClose();
-      }, 700);
+      }, 1200);
     } catch (error) {
       toast.error(
         error instanceof Error
@@ -143,7 +152,7 @@ export default function ReviewForm({
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="grid h-10 w-10 flex-none place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20 disabled:opacity-50"
+              className="grid h-10 w-10 flex-none place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-50"
               aria-label="Close review form"
             >
               <X size={19} />
@@ -201,12 +210,12 @@ export default function ReviewForm({
                   disabled={loading}
                   onClick={() => setRating(star)}
                   onMouseEnter={() =>
-                    setHoverRating(star)
+                    !loading && setHoverRating(star)
                   }
                   onMouseLeave={() =>
-                    setHoverRating(0)
+                    !loading && setHoverRating(0)
                   }
-                  className="transition-transform duration-200 hover:scale-110 disabled:cursor-not-allowed"
+                  className="transition-transform duration-200 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-60"
                   aria-label={`${star} star`}
                 >
 
@@ -227,7 +236,7 @@ export default function ReviewForm({
 
           </div>
 
-          {/* Review */}
+          {/* Review Text */}
 
           <div className="mt-7">
 
@@ -256,7 +265,7 @@ export default function ReviewForm({
               maxLength={1000}
               rows={6}
               placeholder="Tell us about the quality, design, fitting and your overall experience..."
-              className="mt-3 w-full resize-none rounded-2xl border border-maroon-100 bg-[#fffafb] p-4 text-sm leading-6 text-maroon-950 outline-none transition placeholder:text-gray-400 focus:border-pink-400 focus:ring-4 focus:ring-pink-100 disabled:opacity-60"
+              className="mt-3 w-full resize-none rounded-2xl border border-maroon-100 bg-[#fffafb] p-4 text-sm leading-6 text-maroon-950 outline-none transition placeholder:text-gray-400 focus:border-pink-400 focus:ring-4 focus:ring-pink-100 disabled:cursor-not-allowed disabled:opacity-60"
             />
 
             <p className="mt-2 text-xs text-gray-400">
@@ -275,7 +284,8 @@ export default function ReviewForm({
             />
 
             <p>
-              Your review will be submitted for admin approval.
+              Your review will be submitted for admin approval
+              before appearing publicly.
             </p>
 
           </div>
@@ -288,7 +298,7 @@ export default function ReviewForm({
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="rounded-full border border-maroon-200 px-6 py-3 text-xs font-bold uppercase tracking-wider text-maroon-800 transition hover:bg-maroon-50 disabled:opacity-50"
+              className="rounded-full border border-maroon-200 px-6 py-3 text-xs font-bold uppercase tracking-wider text-maroon-800 transition hover:bg-maroon-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancel
             </button>
@@ -296,7 +306,7 @@ export default function ReviewForm({
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-rose-500 to-pink-600 px-7 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-rose-500 to-pink-600 px-7 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
             >
               {loading ? (
                 <>
@@ -315,6 +325,7 @@ export default function ReviewForm({
           </div>
 
         </form>
+
       </div>
     </div>
   );
