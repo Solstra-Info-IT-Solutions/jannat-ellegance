@@ -27,6 +27,8 @@ type Testimonial = {
 
   message: string;
 
+  image?: string;
+
   isApproved: boolean;
 
   isActive: boolean;
