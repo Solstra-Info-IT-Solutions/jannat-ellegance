@@ -26,7 +26,7 @@ const helpOptions = [
 title: 'Shop Collection',
 description: 'Explore our latest styles',
 icon: ShoppingBag,
-href: '/products',
+href: '/shop',
 },
 {
 title: 'Exchange Policy',
