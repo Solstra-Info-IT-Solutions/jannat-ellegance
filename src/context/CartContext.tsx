@@ -40,7 +40,24 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const store = useCartStore();
   const [cartHydratedForUser, setCartHydratedForUser] = useState('');
   const mergedWishlistUser = useRef('');
+  const activeCartUser = useRef('');
   const cartIds = useMemo(() => Array.from(new Set(store.cart.map((item) => item.id))).join(','), [store.cart]);
+
+  // Account cart/wishlist data must disappear from the browser immediately on
+  // logout. Keep the server-side cart intact so it can be restored on login.
+  useEffect(() => {
+    if (status === 'authenticated' && user) {
+      activeCartUser.current = user.id;
+      return;
+    }
+
+    if (status === 'unauthenticated' && activeCartUser.current) {
+      useCartStore.setState({ cart: [], wishlist: [], cartDrawerOpen: false });
+      activeCartUser.current = '';
+      mergedWishlistUser.current = '';
+      setCartHydratedForUser('');
+    }
+  }, [status, user?.id]);
 
   useEffect(() => {
     if (status !== 'authenticated' || !user) {
