@@ -17,11 +17,13 @@ import {
 import AdminShell from '@/components/admin/AdminShell';
 
 type Testimonial = {
-  _id: string;
-  id?: string;
+  _id?: string;
+  id: string;
 
   name: string;
+
   avatarUrl?: string;
+  image?: string;
 
   rating: number;
   message: string;
@@ -35,16 +37,27 @@ type Testimonial = {
 type Filter = 'all' | 'pending' | 'approved' | 'hidden';
 
 export default function AdminTestimonialsPage() {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [testimonials, setTestimonials] = useState<
+    Testimonial[]
+  >([]);
+
   const [loading, setLoading] = useState(true);
 
-  const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [updatingId, setUpdatingId] =
+    useState<string | null>(null);
 
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] =
+    useState<string | null>(null);
 
-  const [filter, setFilter] = useState<Filter>('all');
+  const [filter, setFilter] =
+    useState<Filter>('all');
 
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+
+  /* =====================================================
+     LOAD TESTIMONIALS
+  ===================================================== */
 
   const loadTestimonials = useCallback(async () => {
     try {
@@ -63,7 +76,8 @@ export default function AdminTestimonialsPage() {
 
       if (!response.ok) {
         throw new Error(
-          data.error || 'Unable to load testimonials.'
+          data.error ||
+            'Unable to load testimonials.'
         );
       }
 
@@ -80,8 +94,26 @@ export default function AdminTestimonialsPage() {
   }, []);
 
   useEffect(() => {
-    loadTestimonials();
+    void loadTestimonials();
   }, [loadTestimonials]);
+
+  /* =====================================================
+     SUCCESS MESSAGE AUTO HIDE
+  ===================================================== */
+
+  useEffect(() => {
+    if (!message) return;
+
+    const timer = window.setTimeout(() => {
+      setMessage('');
+    }, 4000);
+
+    return () => window.clearTimeout(timer);
+  }, [message]);
+
+  /* =====================================================
+     UPDATE TESTIMONIAL
+  ===================================================== */
 
   const updateTestimonial = async (
     id: string,
@@ -91,6 +123,7 @@ export default function AdminTestimonialsPage() {
   ) => {
     try {
       setUpdatingId(id);
+      setError('');
 
       const response = await fetch(
         `/api/admin/testimonials/${id}`,
@@ -111,22 +144,44 @@ export default function AdminTestimonialsPage() {
 
       if (!response.ok) {
         throw new Error(
-          data.error || 'Unable to update testimonial.'
+          data.error ||
+            'Unable to update testimonial.'
         );
       }
 
+      const updatedTestimonial =
+        data.testimonial;
+
       setTestimonials((current) =>
         current.map((testimonial) =>
-          testimonial._id === id
+          testimonial.id === id
             ? {
                 ...testimonial,
-                ...data.testimonial,
+                ...updatedTestimonial,
+
+                id:
+                  updatedTestimonial.id ||
+                  testimonial.id,
               }
             : testimonial
         )
       );
+
+      if (updates.isApproved === true) {
+        setMessage(
+          'Testimonial approved successfully.'
+        );
+      } else if (updates.isActive === false) {
+        setMessage(
+          'Testimonial hidden successfully.'
+        );
+      } else if (updates.isActive === true) {
+        setMessage(
+          'Testimonial is now visible.'
+        );
+      }
     } catch (error) {
-      alert(
+      setError(
         error instanceof Error
           ? error.message
           : 'Unable to update testimonial.'
@@ -136,7 +191,13 @@ export default function AdminTestimonialsPage() {
     }
   };
 
-  const deleteTestimonial = async (id: string) => {
+  /* =====================================================
+     DELETE TESTIMONIAL
+  ===================================================== */
+
+  const deleteTestimonial = async (
+    id: string
+  ) => {
     const confirmed = window.confirm(
       'Are you sure you want to permanently delete this testimonial?'
     );
@@ -145,6 +206,7 @@ export default function AdminTestimonialsPage() {
 
     try {
       setDeletingId(id);
+      setError('');
 
       const response = await fetch(
         `/api/admin/testimonials/${id}`,
@@ -158,18 +220,23 @@ export default function AdminTestimonialsPage() {
 
       if (!response.ok) {
         throw new Error(
-          data.error || 'Unable to delete testimonial.'
+          data.error ||
+            'Unable to delete testimonial.'
         );
       }
 
       setTestimonials((current) =>
         current.filter(
           (testimonial) =>
-            testimonial._id !== id
+            testimonial.id !== id
         )
       );
+
+      setMessage(
+        'Testimonial deleted successfully.'
+      );
     } catch (error) {
-      alert(
+      setError(
         error instanceof Error
           ? error.message
           : 'Unable to delete testimonial.'
@@ -179,14 +246,21 @@ export default function AdminTestimonialsPage() {
     }
   };
 
-  const filteredTestimonials = testimonials.filter(
-    (testimonial) => {
+  /* =====================================================
+     FILTERS
+  ===================================================== */
+
+  const filteredTestimonials =
+    testimonials.filter((testimonial) => {
       if (filter === 'pending') {
         return !testimonial.isApproved;
       }
 
       if (filter === 'approved') {
-        return testimonial.isApproved && testimonial.isActive;
+        return (
+          testimonial.isApproved &&
+          testimonial.isActive
+        );
       }
 
       if (filter === 'hidden') {
@@ -194,8 +268,7 @@ export default function AdminTestimonialsPage() {
       }
 
       return true;
-    }
-  );
+    });
 
   const pendingCount = testimonials.filter(
     (item) => !item.isApproved
@@ -212,7 +285,6 @@ export default function AdminTestimonialsPage() {
 
   return (
     <AdminShell title="Testimonials">
-      
       <div className="space-y-6">
 
         {/* ================= TOP PANEL ================= */}
@@ -228,6 +300,7 @@ export default function AdminTestimonialsPage() {
               </div>
 
               <div>
+
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-pink-600">
                   Customer Feedback
                 </p>
@@ -239,12 +312,14 @@ export default function AdminTestimonialsPage() {
                 <p className="mt-1 text-sm text-maroon-800/70">
                   Review, approve, hide or remove customer feedback.
                 </p>
+
               </div>
 
             </div>
 
             <button
-              onClick={loadTestimonials}
+              type="button"
+              onClick={() => void loadTestimonials()}
               disabled={loading}
               className="
                 inline-flex items-center justify-center gap-2
@@ -260,10 +335,15 @@ export default function AdminTestimonialsPage() {
             >
               <RefreshCw
                 size={15}
-                className={loading ? 'animate-spin' : ''}
+                className={
+                  loading
+                    ? 'animate-spin'
+                    : ''
+                }
               />
 
               Refresh
+
             </button>
 
           </div>
@@ -292,7 +372,9 @@ export default function AdminTestimonialsPage() {
             label="Approved"
             value={approvedCount}
             active={filter === 'approved'}
-            onClick={() => setFilter('approved')}
+            onClick={() =>
+              setFilter('approved')
+            }
           />
 
           <StatCard
@@ -312,8 +394,29 @@ export default function AdminTestimonialsPage() {
             <span>{error}</span>
 
             <button
+              type="button"
               onClick={() => setError('')}
               className="shrink-0"
+              aria-label="Close error"
+            >
+              <X size={18} />
+            </button>
+
+          </div>
+        )}
+
+        {/* ================= SUCCESS ================= */}
+
+        {message && (
+          <div className="flex items-center justify-between gap-4 rounded-2xl border border-green-200 bg-green-50 px-5 py-4 text-sm text-green-700">
+
+            <span>{message}</span>
+
+            <button
+              type="button"
+              onClick={() => setMessage('')}
+              className="shrink-0"
+              aria-label="Close message"
             >
               <X size={18} />
             </button>
@@ -325,19 +428,21 @@ export default function AdminTestimonialsPage() {
 
         <section className="overflow-hidden rounded-[28px] border border-maroon-100 bg-[#fff8fa]">
 
-          {/* Header */}
-
           <div className="flex items-center justify-between border-b border-maroon-100 px-5 py-5 sm:px-7">
 
             <div>
+
               <h2 className="font-serif text-xl text-maroon-950">
                 Customer Reviews
               </h2>
 
               <p className="mt-1 text-xs text-gray-500">
                 {filteredTestimonials.length} testimonial
-                {filteredTestimonials.length !== 1 ? 's' : ''}
+                {filteredTestimonials.length !== 1
+                  ? 's'
+                  : ''}
               </p>
+
             </div>
 
           </div>
@@ -387,17 +492,17 @@ export default function AdminTestimonialsPage() {
               {filteredTestimonials.map(
                 (testimonial) => (
                   <TestimonialCard
-                    key={testimonial._id}
+                    key={testimonial.id}
                     testimonial={testimonial}
                     updating={
-                      updatingId === testimonial._id
+                      updatingId === testimonial.id
                     }
                     deleting={
-                      deletingId === testimonial._id
+                      deletingId === testimonial.id
                     }
                     onApprove={() =>
-                      updateTestimonial(
-                        testimonial._id,
+                      void updateTestimonial(
+                        testimonial.id,
                         {
                           isApproved: true,
                           isActive: true,
@@ -405,8 +510,8 @@ export default function AdminTestimonialsPage() {
                       )
                     }
                     onToggleVisibility={() =>
-                      updateTestimonial(
-                        testimonial._id,
+                      void updateTestimonial(
+                        testimonial.id,
                         {
                           isActive:
                             !testimonial.isActive,
@@ -414,8 +519,8 @@ export default function AdminTestimonialsPage() {
                       )
                     }
                     onDelete={() =>
-                      deleteTestimonial(
-                        testimonial._id
+                      void deleteTestimonial(
+                        testimonial.id
                       )
                     }
                   />
@@ -428,7 +533,6 @@ export default function AdminTestimonialsPage() {
         </section>
 
       </div>
-
     </AdminShell>
   );
 }
@@ -451,6 +555,7 @@ function StatCard({
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className={`
         rounded-2xl
@@ -484,6 +589,7 @@ function StatCard({
       <p className="mt-3 font-serif text-3xl">
         {value}
       </p>
+
     </button>
   );
 }
@@ -502,18 +608,18 @@ function TestimonialCard({
   onDelete,
 }: {
   testimonial: Testimonial;
-
   updating: boolean;
-
   deleting: boolean;
-
   onApprove: () => void;
-
   onToggleVisibility: () => void;
-
   onDelete: () => void;
 }) {
   const busy = updating || deleting;
+
+  const initials =
+    testimonial.name
+      ?.charAt(0)
+      ?.toUpperCase() || 'C';
 
   return (
     <div className="p-5 sm:p-7">
@@ -524,14 +630,29 @@ function TestimonialCard({
 
         <div className="min-w-0 flex-1">
 
-          {/* User */}
-
           <div className="flex items-start gap-3">
 
-            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-maroon-950 font-serif text-lg text-pink-200">
+            {/* Avatar */}
 
-              {testimonial.name?.charAt(0)?.toUpperCase() ||
-                'C'}
+            <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full">
+
+              {testimonial.avatarUrl ||
+              testimonial.image ? (
+                <img
+                  src={
+                    testimonial.avatarUrl ||
+                    testimonial.image
+                  }
+                  alt={testimonial.name}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="grid h-full w-full place-items-center bg-maroon-950 font-serif text-lg text-pink-200">
+
+                  {initials}
+
+                </div>
+              )}
 
             </div>
 
@@ -618,6 +739,7 @@ function TestimonialCard({
 
           {!testimonial.isApproved && (
             <button
+              type="button"
               disabled={busy}
               onClick={onApprove}
               className="
@@ -648,6 +770,7 @@ function TestimonialCard({
 
           {testimonial.isApproved && (
             <button
+              type="button"
               disabled={busy}
               onClick={onToggleVisibility}
               className="
@@ -673,10 +796,12 @@ function TestimonialCard({
                   Show
                 </>
               )}
+
             </button>
           )}
 
           <button
+            type="button"
             disabled={busy}
             onClick={onDelete}
             className="

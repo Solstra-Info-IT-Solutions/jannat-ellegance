@@ -18,6 +18,8 @@ import { Product } from '@/types';
 function HomeContent() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
+  const [testimonials, setTestimonials] = useState([]);
+  const [testimonialsLoading, setTestimonialsLoading] = useState(true);
 
   useEffect(() => {
     fetch('/api/products?featured=true&limit=8', {
@@ -27,6 +29,44 @@ function HomeContent() {
       .then((data) => setProducts(data?.products || []))
       .catch(() => setProducts([]));
   }, []);
+
+  useEffect(() => {
+  const loadTestimonials = async () => {
+    try {
+      setTestimonialsLoading(true);
+
+      const response = await fetch(
+        '/api/testimonials',
+        {
+          cache: 'no-store',
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          'Unable to load testimonials'
+        );
+      }
+
+      const data = await response.json();
+
+      setTestimonials(
+        data.testimonials || []
+      );
+    } catch (error) {
+      console.error(
+        'Testimonials loading error:',
+        error
+      );
+
+      setTestimonials([]);
+    } finally {
+      setTestimonialsLoading(false);
+    }
+  };
+
+  void loadTestimonials();
+}, []);
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#fff8fa]">
@@ -200,7 +240,12 @@ function HomeContent() {
 
       {/* Customer Testimonials */}
 
-      <Testimonials />
+      {!testimonialsLoading &&
+  testimonials.length > 0 && (
+    <Testimonials
+      testimonials={testimonials}
+    />
+)}
 
     </main>
   );
