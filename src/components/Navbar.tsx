@@ -3,383 +3,683 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import {
-  Heart,
-  House,
-  LayoutDashboard,
-  Menu,
-  Package,
-  Search,
-  ShoppingBag,
-  User,
-  X,
-  LogOut,
-  UserPlus,
-  LogIn,
+Heart,
+House,
+LayoutDashboard,
+Menu,
+Package,
+Search,
+ShoppingBag,
+User,
+X,
+LogOut,
+UserPlus,
+LogIn,
+Sparkles,
+ChevronDown,
+ArrowRight,
 } from 'lucide-react';
+
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthProvider';
 
 const Navbar: React.FC = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [authDropdownOpen, setAuthDropdownOpen] = useState(false);
+const router = useRouter();
+const pathname = usePathname();
+const searchParams = useSearchParams();
 
-  // Active NextAuth Authentication State
-  const { user, status, logout } = useAuth();
-  const dropdownRef = useRef<HTMLDivElement>(null);
+const [menuOpen, setMenuOpen] = useState(false);
+const [searchOpen, setSearchOpen] = useState(false);
+const [searchQuery, setSearchQuery] = useState('');
+const [authDropdownOpen, setAuthDropdownOpen] = useState(false);
 
-  const { cartCount, wishlist, setCartDrawerOpen } = useCart();
+const { user, status, logout } = useAuth();
 
-  // Close dropdown on click outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setAuthDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Sync search query from URL
-  useEffect(() => {
-    const q = searchParams.get('search');
-    if (q) setSearchQuery(q);
-  }, [searchParams]);
+const { cartCount, wishlist, setCartDrawerOpen } = useCart();
 
-  // Handle Search Submission
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchOpen(false);
-    }
-  };
+useEffect(() => {
+const handleClickOutside = (event: MouseEvent) => {
+if (
+dropdownRef.current &&
+!dropdownRef.current.contains(event.target as Node)
+) {
+setAuthDropdownOpen(false);
+}
+};
 
-  return (
-    <header className="sticky top-0 z-40 bg-white border-b border-maroon-200 shadow-md w-full">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="h-20 flex items-center justify-between gap-4">
 
-          {/* Left: Mobile Menu Button */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="lg:hidden rounded-lg border border-pink-200 bg-white p-2 text-maroon-850 transition hover:bg-pink-50"
-            aria-label="Toggle Menu"
-          >
-            {menuOpen ? <X size={26} strokeWidth={2.3} className="!text-maroon-850" /> : <Menu size={26} strokeWidth={2.3} className="!text-maroon-850" />}
-          </button>
+document.addEventListener('mousedown', handleClickOutside);
 
-          {/* Brand Logo & Name */}
-          <Link
-            href="/"
-            className="flex items-center gap-3 group focus:outline-none"
-          >
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 border-maroon-200 shadow-sm transition-transform duration-300 group-hover:scale-105 shrink-0 relative">
-              <Image
-                src="/images/logo.jpeg"
-                alt="Jannat Elegance Logo"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-serif text-xl sm:text-2xl font-bold tracking-wide text-maroon-950 group-hover:text-maroon-800 transition">
-                JANNAT
-              </span>
-              <span className="text-[9px] tracking-[3px] font-medium text-pink-600 uppercase -mt-1 font-sans">
-                Elegance
-              </span>
-            </div>
-          </Link>
+return () => {
+  document.removeEventListener('mousedown', handleClickOutside);
+};
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-2 rounded-full border border-pink-100 bg-white p-1.5 text-sm font-bold font-sans">
-            <Link
-              href="/"
-              className="rounded-full border border-pink-200 bg-pink-50 px-4 py-2 text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-            >
-              Home
-            </Link>
 
-            <Link
-              href="/shop"
-              className="rounded-full border border-pink-200 bg-pink-50 px-4 py-2 text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-            >
-              Shop
-            </Link>
+}, []);
 
-            <Link
-              href="/#about"
-              className="rounded-full border border-pink-200 bg-pink-50 px-4 py-2 text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-            >
-              About
-            </Link>
-            <Link
-              href="/contact-us"
-              className="rounded-full border border-pink-200 bg-pink-50 px-4 py-2 text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-            >
-              Contact Us
-            </Link>
-          </nav>
+useEffect(() => {
+const q = searchParams.get('search');
 
-          {/* Action Icons */}
-          <div className="flex items-center gap-2 sm:gap-3 text-maroon-950">
-            {/* Search Toggle */}
-            <button
-              onClick={() => setSearchOpen(!searchOpen)}
-              className="p-2.5 rounded-full border border-pink-200 bg-pink-50 text-maroon-850 transition hover:bg-pink-100 shadow-sm"
-              aria-label="Search"
-            >
-              <Search size={21} />
-            </button>
 
-            {/* Wishlist Link */}
-            <Link
-              href="/shop?wishlist=true"
-              className="relative p-2.5 rounded-full bg-pink-100 border border-pink-200 hover:bg-pink-200 text-pink-850 transition hidden sm:block shadow-sm"
-              aria-label="Wishlist"
-            >
-              <Heart size={21} />
-              {wishlist.length > 0 && (
-                <span className="absolute top-1 right-1 bg-maroon-800 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-white">
-                  {wishlist.length}
-                </span>
-              )}
-            </Link>
+if (q) {
+  setSearchQuery(q);
+}
 
-            {/* Shopping Cart */}
-            <button
-              onClick={() => setCartDrawerOpen(true)}
-              className="relative p-2.5 rounded-full bg-maroon-850 hover:bg-maroon-950 text-white transition shadow-md"
-              aria-label="Cart"
-            >
-              <ShoppingBag size={22} />
-              {cartCount > 0 && (
-                <span className="absolute top-1 right-1 bg-maroon-800 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">
-                  {cartCount}
-                </span>
-              )}
-            </button>
+}, [searchParams]);
 
-            {/* Desktop Auth / Profile Dropdown */}
-            <div className="relative hidden sm:block" ref={dropdownRef}>
-              <button
-                onClick={() => setAuthDropdownOpen(!authDropdownOpen)}
-                className="flex items-center gap-2 p-2.5 rounded-full border border-pink-200 bg-maroon-50 text-maroon-850 transition hover:bg-pink-100 shadow-sm"
-                aria-label="Account"
-              >
-                <User size={21} strokeWidth={2.2} className="!text-maroon-850" />
-              </button>
+const handleSearchSubmit = (e: React.FormEvent) => {
+e.preventDefault();
 
-              {/* Floating Profile Menu */}
-              {authDropdownOpen && (
-                <div className="absolute right-0 mt-3 w-64 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-maroon-50 p-4 z-50 animate-fadeUp">
-                  {status !== 'authenticated' ? (
-                    <div>
-                      <div className="text-center pb-3 mb-4 border-b border-maroon-50">
-                        <h4 className="font-serif text-lg font-bold text-maroon-950">
-                          Welcome to Jannat
-                        </h4>
-                        <p className="text-xs text-maroon-600 mt-0.5 font-sans">
-                          Explore our collection and manage orders
-                        </p>
-                      </div>
 
-                      <div className="flex flex-col gap-2 font-sans">
-                        <Link
-                          href="/login"
-                          onClick={() => setAuthDropdownOpen(false)}
-                          className="flex w-full items-center justify-center gap-2 rounded-lg border border-pink-200 bg-pink-50 py-2 text-xs font-semibold uppercase tracking-wider text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-                        >
-                          <LogIn size={14} /> Log In
-                        </Link>
-                        <Link
-                          href="/signup"
-                          onClick={() => setAuthDropdownOpen(false)}
-                          className="flex items-center justify-center gap-2 w-full rounded-lg border border-pink-600 bg-pink-600 py-2 text-xs font-semibold uppercase tracking-wider text-white transition hover:border-maroon-850 hover:bg-maroon-850"
-                        >
-                          <UserPlus size={14} /> Create Account
-                        </Link>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="font-sans">
-                      <div className="pb-3 mb-3 border-b border-maroon-50">
-                        <p className="text-xs text-gray-500">Logged in as</p>
-                        <p className="text-sm font-semibold text-maroon-950 truncate">
-                          {user?.name || user?.email}
-                        </p>
-                      </div>
-                      
-                      <div className="flex flex-col gap-1.5 mb-3">
-                        <Link
-                          href="/profile"
-                          onClick={() => setAuthDropdownOpen(false)}
-                          className="flex w-full items-center gap-2 rounded-lg border border-pink-200 bg-pink-50 px-3 py-2 text-xs font-bold uppercase tracking-wide text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-                        >
-                          <User size={14} /> My Profile
-                        </Link>
-                        <Link
-                          href="/orders"
-                          onClick={() => setAuthDropdownOpen(false)}
-                          className="flex w-full items-center gap-2 rounded-lg border border-pink-200 bg-pink-50 px-3 py-2 text-xs font-bold uppercase tracking-wide text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-                        >
-                          <Package size={14} /> My Orders
-                        </Link>
-                        <Link
-                          href="/track-order"
-                          onClick={() => setAuthDropdownOpen(false)}
-                          className="flex w-full items-center gap-2 rounded-lg border border-pink-200 bg-pink-50 px-3 py-2 text-xs font-bold uppercase tracking-wide text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-                        >
-                          <Package size={14} /> Track My Order
-                        </Link>
-                        <Link
-                          href="/shop?wishlist=true"
-                          onClick={() => setAuthDropdownOpen(false)}
-                          className="flex w-full items-center gap-2 rounded-lg border border-pink-200 bg-pink-50 px-3 py-2 text-xs font-bold uppercase tracking-wide text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-                        >
-                          <Heart size={14} /> My Wishlist
-                        </Link>
-                        {user?.role === 'admin' && (
-                          <Link
-                            href="/admin"
-                            onClick={() => setAuthDropdownOpen(false)}
-                            className="flex w-full items-center gap-2 rounded-lg border border-pink-200 bg-pink-50 px-3 py-2 text-xs font-bold uppercase tracking-wide text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-                          >
-                            <LayoutDashboard size={14} /> Admin Console
-                          </Link>
-                        )}
-                      </div>
+if (!searchQuery.trim()) return;
 
-                      <button
-                        onClick={() => {
-                          setAuthDropdownOpen(false);
-                          void logout();
-                        }}
-                        className="flex items-center gap-2 w-full rounded-lg border border-pink-200 bg-pink-50 px-3 py-2 text-xs font-semibold text-maroon-850 transition hover:border-maroon-850 hover:bg-maroon-850 hover:text-white"
-                      >
-                        <LogOut size={14} /> Log Out
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
+router.push(
+  `/shop?search=${encodeURIComponent(searchQuery.trim())}`
+);
+
+setSearchOpen(false);
+
+
+};
+
+const isActive = (href: string) => {
+if (href === '/') {
+return pathname === '/';
+}
+
+
+return pathname === href;
+
+};
+
+const navLinks = [
+{
+label: 'Home',
+href: '/',
+},
+{
+label: 'Shop',
+href: '/shop',
+},
+{
+label: 'About',
+href: '/#about',
+},
+{
+label: 'Contact',
+href: '/contact-us',
+},
+];
+
+return ( <header className="sticky top-0 z-50 w-full border-b border-pink-100/80 bg-[#fff8fa]/95 shadow-[0_8px_30px_rgba(76,5,25,0.06)] backdrop-blur-xl">
+
+  {/* Top Decorative Line */}
+  <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-pink-400 to-transparent" />
+
+  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+    <div className="flex h-[78px] items-center justify-between gap-3 lg:h-[86px]">
+
+      {/* Mobile Menu */}
+      <button
+        onClick={() => setMenuOpen(!menuOpen)}
+        className="group grid h-11 w-11 flex-none place-items-center rounded-2xl border border-pink-200 bg-white text-maroon-950 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-pink-400 hover:bg-pink-50 hover:shadow-md lg:hidden"
+        aria-label="Toggle Menu"
+      >
+        {menuOpen ? (
+          <X
+            size={23}
+            className="transition-transform duration-300 group-hover:rotate-90"
+          />
+        ) : (
+          <Menu size={23} />
+        )}
+      </button>
+
+      {/* Brand */}
+      <Link
+        href="/"
+        className="group relative flex items-center gap-3 sm:gap-4"
+      >
+        {/* Logo Glow */}
+        <div className="absolute left-0 top-1/2 h-14 w-14 -translate-y-1/2 rounded-full bg-pink-300/30 blur-xl transition duration-500 group-hover:bg-pink-400/50" />
+
+        <div className="relative h-12 w-12 flex-none overflow-hidden rounded-full border-2 border-pink-300 bg-white shadow-lg shadow-pink-200/40 transition-all duration-500 group-hover:scale-105 group-hover:border-rose-400 sm:h-[58px] sm:w-[58px]">
+          <Image
+            src="/images/logo.jpeg"
+            alt="Jannat Elegance Logo"
+            fill
+            priority
+            className="object-cover"
+          />
         </div>
 
-        {/* Dropdown Search Bar */}
-        {searchOpen && (
-          <div className="pb-4 animate-fadeUp">
-            <form onSubmit={handleSearchSubmit} className="relative max-w-2xl mx-auto">
-              <Search
-                size={18}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-maroon-500"
-              />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search Shararas, Gararas, bridal collection..."
-                className="w-full bg-[#fff0f3] border border-maroon-100 text-maroon-950 rounded-full py-3 pl-11 pr-4 outline-none focus:border-maroon-700 focus:ring-1 focus:ring-maroon-700 transition placeholder:text-maroon-400 text-sm font-sans"
-                autoFocus
-              />
-            </form>
+        <div className="relative flex flex-col leading-none">
+
+          <div className="flex items-center gap-2">
+            <span className="font-serif text-[21px] font-bold tracking-[0.16em] text-maroon-950 transition-colors duration-300 group-hover:text-rose-700 sm:text-[27px]">
+              JANNAT
+            </span>
+
+            <Sparkles
+              size={14}
+              className="hidden text-pink-500 transition-transform duration-500 group-hover:rotate-12 sm:block"
+            />
           </div>
-        )}
 
-        {/* Mobile Navigation Drawer */}
-        {menuOpen && (
-          <div className="lg:hidden pb-5 animate-fadeUp">
-            <nav className="mt-2 flex flex-col gap-3 border-t border-pink-100 pt-5 font-sans" aria-label="Mobile navigation">
-              <Link
-                onClick={() => setMenuOpen(false)}
-                href="/"
-                className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-base font-bold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-              >
-                <House size={22} strokeWidth={1.8} /> Home
-              </Link>
+          <span className="mt-1 text-[8px] font-bold uppercase tracking-[0.42em] text-pink-600 sm:text-[10px]">
+            Elegance
+          </span>
 
-              <Link
-                onClick={() => setMenuOpen(false)}
-                href="/shop"
-                className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-base font-bold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-              >
-                <ShoppingBag size={22} strokeWidth={1.8} /> Shop
-              </Link>
+        </div>
+      </Link>
 
-              <Link
-                onClick={() => setMenuOpen(false)}
-                href="/shop?wishlist=true"
-                className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-base font-bold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-              >
-                <Heart size={22} strokeWidth={1.8} /> <span>Wishlist</span>
-                {wishlist.length > 0 && (
-                  <span className="ml-auto rounded-full bg-maroon-850 px-2.5 py-0.5 text-xs font-extrabold text-white">
-                    {wishlist.length}
-                  </span>
-                )}
-              </Link>
+      {/* Desktop Navigation */}
+      <nav className="hidden items-center rounded-full border border-pink-100 bg-white/80 p-1.5 shadow-sm lg:flex">
 
-              {status !== 'authenticated' ? (
-                <>
-                  <Link
-                    onClick={() => setMenuOpen(false)}
-                    href="/login"
-                    className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-base font-bold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-                  >
-                    <User size={22} strokeWidth={1.8} /> Log In
-                  </Link>
-                  <Link
-                    onClick={() => setMenuOpen(false)}
-                    href="/signup"
-                    className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-600 bg-pink-600 px-4 py-3 text-base font-bold text-white transition hover:bg-maroon-850"
-                  >
-                    <UserPlus size={22} strokeWidth={1.8} /> Create Account
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link
-                    onClick={() => setMenuOpen(false)}
-                    href="/orders"
-                    className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-base font-bold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-                  >
-                    <Package size={22} strokeWidth={1.8} /> My Orders
-                  </Link>
-                  <Link onClick={() => setMenuOpen(false)} href="/profile" className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-base font-bold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"><User size={22} strokeWidth={1.8} /> My Profile</Link>
-                  {user?.role === 'admin' && (
-                    <Link
-                      onClick={() => setMenuOpen(false)}
-                      href="/admin"
-                      className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-base font-extrabold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
-                    >
-                      <LayoutDashboard size={22} strokeWidth={1.8} /> Admin Console
-                    </Link>
+        {navLinks.map((link) => {
+          const active = isActive(link.href);
+
+          return (
+            <Link
+              key={link.label}
+              href={link.href}
+              className={`relative rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 ${
+                active
+                  ? 'bg-gradient-to-r from-rose-800 to-pink-600 text-white shadow-md shadow-pink-200'
+                  : 'text-maroon-800 hover:bg-pink-50 hover:text-pink-600'
+              }`}
+            >
+              {link.label}
+            </Link>
+          );
+        })}
+
+      </nav>
+
+      {/* Right Actions */}
+      <div className="flex items-center gap-1.5 sm:gap-2.5">
+
+        {/* Search */}
+        <button
+          onClick={() => {
+            setSearchOpen(!searchOpen);
+            setMenuOpen(false);
+          }}
+          className={`group grid h-10 w-10 place-items-center rounded-full border transition-all duration-300 sm:h-11 sm:w-11 ${
+            searchOpen
+              ? 'border-pink-500 bg-pink-500 text-white shadow-lg shadow-pink-200'
+              : 'border-pink-200 bg-white text-maroon-900 shadow-sm hover:-translate-y-0.5 hover:border-pink-400 hover:bg-pink-50'
+          }`}
+          aria-label="Search"
+        >
+          {searchOpen ? (
+            <X size={20} />
+          ) : (
+            <Search
+              size={20}
+              className="transition-transform group-hover:scale-110"
+            />
+          )}
+        </button>
+
+        {/* Wishlist */}
+        <Link
+          href="/shop?wishlist=true"
+          className="relative hidden h-11 w-11 place-items-center rounded-full border border-pink-200 bg-white text-pink-600 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-pink-400 hover:bg-pink-50 sm:grid"
+          aria-label="Wishlist"
+        >
+          <Heart
+            size={20}
+            className="transition-transform duration-300 hover:scale-110"
+          />
+
+          {wishlist.length > 0 && (
+            <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full border-2 border-[#fff8fa] bg-gradient-to-br from-rose-600 to-pink-500 px-1 text-[10px] font-bold text-white shadow-sm">
+              {wishlist.length > 99 ? '99+' : wishlist.length}
+            </span>
+          )}
+        </Link>
+
+        {/* Cart */}
+        <button
+          onClick={() => setCartDrawerOpen(true)}
+          className="relative grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-maroon-950 via-rose-900 to-rose-700 text-white shadow-lg shadow-rose-300/30 transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 hover:shadow-xl sm:h-11 sm:w-11"
+          aria-label="Cart"
+        >
+          <ShoppingBag size={20} />
+
+          {cartCount > 0 && (
+            <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full border-2 border-[#fff8fa] bg-pink-500 px-1 text-[10px] font-bold text-white shadow-sm">
+              {cartCount > 99 ? '99+' : cartCount}
+            </span>
+          )}
+        </button>
+
+        {/* Profile */}
+        <div
+          ref={dropdownRef}
+          className="relative hidden sm:block"
+        >
+          <button
+            onClick={() => setAuthDropdownOpen(!authDropdownOpen)}
+            className={`flex h-11 items-center justify-center gap-1 rounded-full border px-3 transition-all duration-300 ${
+              authDropdownOpen
+                ? 'border-pink-400 bg-pink-50 text-pink-600'
+                : 'border-pink-200 bg-white text-maroon-900 shadow-sm hover:-translate-y-0.5 hover:border-pink-400 hover:bg-pink-50'
+            }`}
+            aria-label="Account"
+          >
+            <div className="grid h-7 w-7 place-items-center rounded-full bg-gradient-to-br from-pink-100 to-rose-100">
+              <User size={16} />
+            </div>
+
+            <ChevronDown
+              size={14}
+              className={`transition-transform duration-300 ${
+                authDropdownOpen ? 'rotate-180' : ''
+              }`}
+            />
+          </button>
+
+          {/* Account Dropdown */}
+          {authDropdownOpen && (
+            <div className="absolute right-0 mt-4 w-[300px] overflow-hidden rounded-[1.5rem] border border-pink-100 bg-white shadow-2xl shadow-rose-950/15 animate-fadeUp">
+
+              {/* Decorative Header */}
+              <div className="relative overflow-hidden bg-gradient-to-br from-maroon-950 via-rose-900 to-pink-700 px-5 py-5 text-white">
+
+                <div className="absolute -right-5 -top-8 h-28 w-28 rounded-full bg-pink-300/20 blur-2xl" />
+
+                <div className="relative">
+
+                  {status !== 'authenticated' ? (
+                    <>
+                      <div className="flex items-center gap-2">
+                        <Sparkles size={17} className="text-pink-200" />
+
+                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-pink-100">
+                          Welcome
+                        </p>
+                      </div>
+
+                      <h3 className="mt-2 font-serif text-2xl">
+                        Jannat Elegance
+                      </h3>
+
+                      <p className="mt-1 text-xs leading-5 text-pink-100/80">
+                        Sign in to manage your orders and wishlist.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-xs text-pink-100/70">
+                        Welcome back,
+                      </p>
+
+                      <h3 className="mt-1 truncate font-serif text-xl">
+                        {user?.name || 'Beautiful Queen'} 👑
+                      </h3>
+
+                      <p className="mt-1 truncate text-xs text-pink-100/70">
+                        {user?.email}
+                      </p>
+                    </>
                   )}
+
+                </div>
+
+              </div>
+
+              {/* Logged Out */}
+              {status !== 'authenticated' ? (
+                <div className="space-y-3 p-4">
+
+                  <Link
+                    href="/login"
+                    onClick={() => setAuthDropdownOpen(false)}
+                    className="flex items-center justify-center gap-2 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-xs font-bold uppercase tracking-wider text-maroon-900 transition hover:border-pink-400 hover:bg-pink-100"
+                  >
+                    <LogIn size={15} />
+                    Log In
+                  </Link>
+
+                  <Link
+                    href="/signup"
+                    onClick={() => setAuthDropdownOpen(false)}
+                    className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-rose-700 to-pink-600 px-4 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-pink-200 transition hover:scale-[1.02]"
+                  >
+                    <UserPlus size={15} />
+                    Create Account
+                  </Link>
+
+                </div>
+              ) : (
+                <div className="p-3">
+
+                  <div className="space-y-1">
+
+                    <Link
+                      href="/profile"
+                      onClick={() => setAuthDropdownOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-maroon-900 transition hover:bg-pink-50"
+                    >
+                      <User
+                        size={17}
+                        className="text-pink-600"
+                      />
+                      My Profile
+                      <ArrowRight
+                        size={15}
+                        className="ml-auto text-pink-300"
+                      />
+                    </Link>
+
+                    <Link
+                      href="/orders"
+                      onClick={() => setAuthDropdownOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-maroon-900 transition hover:bg-pink-50"
+                    >
+                      <Package
+                        size={17}
+                        className="text-pink-600"
+                      />
+                      My Orders
+                      <ArrowRight
+                        size={15}
+                        className="ml-auto text-pink-300"
+                      />
+                    </Link>
+
+                    <Link
+                      href="/track-order"
+                      onClick={() => setAuthDropdownOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-maroon-900 transition hover:bg-pink-50"
+                    >
+                      <ShoppingBag
+                        size={17}
+                        className="text-pink-600"
+                      />
+                      Track My Order
+                      <ArrowRight
+                        size={15}
+                        className="ml-auto text-pink-300"
+                      />
+                    </Link>
+
+                    <Link
+                      href="/shop?wishlist=true"
+                      onClick={() => setAuthDropdownOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-maroon-900 transition hover:bg-pink-50"
+                    >
+                      <Heart
+                        size={17}
+                        className="text-pink-600"
+                      />
+                      My Wishlist
+
+                      {wishlist.length > 0 && (
+                        <span className="ml-auto rounded-full bg-pink-100 px-2 py-0.5 text-[10px] font-bold text-pink-600">
+                          {wishlist.length}
+                        </span>
+                      )}
+                    </Link>
+
+                    {user?.role === 'admin' && (
+                      <Link
+                        href="/admin"
+                        onClick={() => setAuthDropdownOpen(false)}
+                        className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-maroon-900 transition hover:bg-pink-50"
+                      >
+                        <LayoutDashboard
+                          size={17}
+                          className="text-pink-600"
+                        />
+                        Admin Console
+                        <ArrowRight
+                          size={15}
+                          className="ml-auto text-pink-300"
+                        />
+                      </Link>
+                    )}
+
+                  </div>
+
+                  <div className="my-2 border-t border-pink-100" />
+
                   <button
                     onClick={() => {
-                      setMenuOpen(false);
+                      setAuthDropdownOpen(false);
                       void logout();
                     }}
-                    className="flex min-h-12 items-center gap-4 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-left text-base font-bold text-maroon-850 transition hover:border-pink-300 hover:bg-pink-100"
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-rose-700 transition hover:bg-rose-50"
                   >
-                    <LogOut size={14} /> Log Out
+                    <LogOut size={17} />
+                    Log Out
                   </button>
-                </>
+
+                </div>
               )}
-            </nav>
-          </div>
-        )}
+
+            </div>
+          )}
+        </div>
+
       </div>
-    </header>
-  );
+
+    </div>
+
+    {/* Search Panel */}
+    {searchOpen && (
+      <div className="border-t border-pink-100 py-5 animate-fadeUp">
+
+        <form
+          onSubmit={handleSearchSubmit}
+          className="relative mx-auto max-w-3xl"
+        >
+
+          <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-pink-200 via-rose-100 to-pink-200 opacity-60 blur-md" />
+
+          <div className="relative flex items-center rounded-full border border-pink-200 bg-white p-1.5 shadow-lg shadow-pink-100">
+
+            <Search
+              size={19}
+              className="ml-4 text-pink-500"
+            />
+
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search Shararas, Gararas, Gowns, Lehengas..."
+              className="min-w-0 flex-1 bg-transparent px-4 py-3 text-sm text-maroon-950 outline-none placeholder:text-gray-400"
+              autoFocus
+            />
+
+            <button
+              type="submit"
+              className="rounded-full bg-gradient-to-r from-rose-800 to-pink-600 px-5 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:scale-105"
+            >
+              Search
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+    )}
+
+    {/* Mobile Menu */}
+    {menuOpen && (
+      <div className="border-t border-pink-100 pb-5 pt-4 animate-fadeUp lg:hidden">
+
+        <nav
+          className="space-y-2"
+          aria-label="Mobile navigation"
+        >
+
+          <Link
+            onClick={() => setMenuOpen(false)}
+            href="/"
+            className="flex items-center gap-4 rounded-2xl border border-pink-100 bg-white px-4 py-4 text-sm font-bold text-maroon-950 shadow-sm transition hover:bg-pink-50"
+          >
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-pink-50 text-pink-600">
+              <House size={19} />
+            </div>
+
+            Home
+          </Link>
+
+          <Link
+            onClick={() => setMenuOpen(false)}
+            href="/shop"
+            className="flex items-center gap-4 rounded-2xl border border-pink-100 bg-white px-4 py-4 text-sm font-bold text-maroon-950 shadow-sm transition hover:bg-pink-50"
+          >
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-pink-50 text-pink-600">
+              <ShoppingBag size={19} />
+            </div>
+
+            Shop Collection
+          </Link>
+
+          <Link
+            onClick={() => setMenuOpen(false)}
+            href="/shop?wishlist=true"
+            className="flex items-center gap-4 rounded-2xl border border-pink-100 bg-white px-4 py-4 text-sm font-bold text-maroon-950 shadow-sm transition hover:bg-pink-50"
+          >
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-pink-50 text-pink-600">
+              <Heart size={19} />
+            </div>
+
+            My Wishlist
+
+            {wishlist.length > 0 && (
+              <span className="ml-auto rounded-full bg-gradient-to-r from-rose-700 to-pink-600 px-3 py-1 text-xs font-bold text-white">
+                {wishlist.length}
+              </span>
+            )}
+          </Link>
+
+          <Link
+            onClick={() => setMenuOpen(false)}
+            href="/#about"
+            className="flex items-center gap-4 rounded-2xl border border-pink-100 bg-white px-4 py-4 text-sm font-bold text-maroon-950 shadow-sm transition hover:bg-pink-50"
+          >
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-pink-50 text-pink-600">
+              <Sparkles size={19} />
+            </div>
+
+            About Jannat
+          </Link>
+
+          <Link
+            onClick={() => setMenuOpen(false)}
+            href="/contact-us"
+            className="flex items-center gap-4 rounded-2xl border border-pink-100 bg-white px-4 py-4 text-sm font-bold text-maroon-950 shadow-sm transition hover:bg-pink-50"
+          >
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-pink-50 text-pink-600">
+              <User size={19} />
+            </div>
+
+            Contact Us
+          </Link>
+
+          <div className="my-3 border-t border-pink-100" />
+
+          {status !== 'authenticated' ? (
+            <div className="grid grid-cols-2 gap-3">
+
+              <Link
+                onClick={() => setMenuOpen(false)}
+                href="/login"
+                className="flex items-center justify-center gap-2 rounded-xl border border-pink-200 bg-pink-50 px-4 py-3 text-xs font-bold uppercase tracking-wider text-maroon-900"
+              >
+                <LogIn size={15} />
+                Login
+              </Link>
+
+              <Link
+                onClick={() => setMenuOpen(false)}
+                href="/signup"
+                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-rose-700 to-pink-600 px-4 py-3 text-xs font-bold uppercase tracking-wider text-white"
+              >
+                <UserPlus size={15} />
+                Sign Up
+              </Link>
+
+            </div>
+          ) : (
+            <>
+
+              <Link
+                onClick={() => setMenuOpen(false)}
+                href="/profile"
+                className="flex items-center gap-4 rounded-2xl border border-pink-100 bg-white px-4 py-4 text-sm font-bold text-maroon-950 shadow-sm"
+              >
+                <User size={20} className="text-pink-600" />
+                My Profile
+              </Link>
+
+              <Link
+                onClick={() => setMenuOpen(false)}
+                href="/orders"
+                className="flex items-center gap-4 rounded-2xl border border-pink-100 bg-white px-4 py-4 text-sm font-bold text-maroon-950 shadow-sm"
+              >
+                <Package size={20} className="text-pink-600" />
+                My Orders
+              </Link>
+
+              <Link
+                onClick={() => setMenuOpen(false)}
+                href="/track-order"
+                className="flex items-center gap-4 rounded-2xl border border-pink-100 bg-white px-4 py-4 text-sm font-bold text-maroon-950 shadow-sm"
+              >
+                <ShoppingBag size={20} className="text-pink-600" />
+                Track My Order
+              </Link>
+
+              {user?.role === 'admin' && (
+                <Link
+                  onClick={() => setMenuOpen(false)}
+                  href="/admin"
+                  className="flex items-center gap-4 rounded-2xl border border-pink-100 bg-white px-4 py-4 text-sm font-bold text-maroon-950 shadow-sm"
+                >
+                  <LayoutDashboard
+                    size={20}
+                    className="text-pink-600"
+                  />
+                  Admin Console
+                </Link>
+              )}
+
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  void logout();
+                }}
+                className="flex w-full items-center gap-4 rounded-2xl border border-rose-100 bg-rose-50 px-4 py-4 text-left text-sm font-bold text-rose-700"
+              >
+                <LogOut size={20} />
+                Log Out
+              </button>
+
+            </>
+          )}
+
+        </nav>
+
+      </div>
+    )}
+
+  </div>
+</header>
+
+);
 };
 
 export default Navbar;
