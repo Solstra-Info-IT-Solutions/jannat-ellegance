@@ -14,7 +14,7 @@ import {
   X,
 } from 'lucide-react';
 
-import AdminShell from '@/components/AdminShell';
+import AdminShell from '@/components/admin/AdminShell';
 
 type Testimonial = {
   _id: string;
