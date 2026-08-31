@@ -1,6 +1,11 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import {
+  Suspense,
+  useEffect,
+  useState,
+} from 'react';
+
 import { useSearchParams } from 'next/navigation';
 
 import Hero from '@/components/Hero';
@@ -8,86 +13,136 @@ import CategorySection from '@/components/CategorySection';
 import CategorySlider from '@/components/CategorySlider';
 import AboutSection from '@/components/AboutSection';
 import ProductCard from '@/components/ProductCard';
-import Testimonials from '@/components/Testimonials';
+import Testimonials, {
+  Testimonial,
+} from '@/components/Testimonials';
+
 import ExploreColors from '@/components/ExploreColors';
 import VideoSection from '@/components/VideoSection';
 
 import { Sparkles } from 'lucide-react';
+
 import { Product } from '@/types';
 
 function HomeContent() {
   const searchParams = useSearchParams();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [testimonials, setTestimonials] = useState([]);
-  const [testimonialsLoading, setTestimonialsLoading] = useState(true);
+
+  const [products, setProducts] =
+    useState<Product[]>([]);
+
+  const [testimonials, setTestimonials] =
+    useState<Testimonial[]>([]);
+
+  const [testimonialsLoaded, setTestimonialsLoaded] =
+    useState(false);
+
+  /* =====================================================
+     LOAD FEATURED PRODUCTS
+  ===================================================== */
 
   useEffect(() => {
-    fetch('/api/products?featured=true&limit=8', {
-      cache: 'no-store',
-    })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => setProducts(data?.products || []))
-      .catch(() => setProducts([]));
+    fetch(
+      '/api/products?featured=true&limit=8',
+      {
+        cache: 'no-store',
+      }
+    )
+      .then((res) =>
+        res.ok ? res.json() : null
+      )
+      .then((data) =>
+        setProducts(data?.products || [])
+      )
+      .catch(() =>
+        setProducts([])
+      );
   }, []);
 
+  /* =====================================================
+     LOAD APPROVED TESTIMONIALS
+  ===================================================== */
+
   useEffect(() => {
-  const loadTestimonials = async () => {
-    try {
-      setTestimonialsLoading(true);
-
-      const response = await fetch(
-        '/api/testimonials',
-        {
-          cache: 'no-store',
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          'Unable to load testimonials'
+    const loadTestimonials = async () => {
+      try {
+        const response = await fetch(
+          '/api/testimonials',
+          {
+            cache: 'no-store',
+          }
         );
+
+        if (!response.ok) {
+          setTestimonials([]);
+          return;
+        }
+
+        const data = await response.json();
+
+        setTestimonials(
+          data?.testimonials || []
+        );
+      } catch (error) {
+        console.error(
+          'Unable to load testimonials:',
+          error
+        );
+
+        setTestimonials([]);
+      } finally {
+        setTestimonialsLoaded(true);
       }
+    };
 
-      const data = await response.json();
-
-      setTestimonials(
-        data.testimonials || []
-      );
-    } catch (error) {
-      console.error(
-        'Testimonials loading error:',
-        error
-      );
-
-      setTestimonials([]);
-    } finally {
-      setTestimonialsLoading(false);
-    }
-  };
-
-  void loadTestimonials();
-}, []);
+    loadTestimonials();
+  }, []);
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#fff8fa]">
 
-      {/* Unauthorized Alert */}
+      {/* =====================================================
+          UNAUTHORIZED ALERT
+      ===================================================== */}
+
       {searchParams.get('unauthorized') === '1' && (
+
         <div
           role="alert"
-          className="bg-gradient-to-r from-maroon-950 via-rose-900 to-maroon-950 px-4 py-3 text-center text-sm font-semibold text-white"
+          className="
+            bg-gradient-to-r
+            from-maroon-950
+            via-rose-900
+            to-maroon-950
+            px-4
+            py-3
+            text-center
+            text-sm
+            font-semibold
+            text-white
+          "
         >
-          Unauthorized — staff access is required to view the admin console.
+          Unauthorized — staff access is required
+          to view the admin console.
         </div>
+
       )}
 
-      {/* Hero */}
+      {/* =====================================================
+          HERO
+      ===================================================== */}
+
       <Hero />
 
-      {/* Categories */}
+      {/* =====================================================
+          CATEGORIES
+      ===================================================== */}
+
       <CategorySection />
 
-      {/* Category Slider */}
+      {/* =====================================================
+          CATEGORY SLIDER
+      ===================================================== */}
+
       <CategorySlider />
 
       {/* =====================================================
@@ -96,7 +151,7 @@ function HomeContent() {
 
       <section className="relative overflow-hidden bg-gradient-to-b from-[#fff8fa] via-pink-50/60 to-[#fff3f6] py-16 sm:py-24">
 
-        {/* Background Luxury Glow */}
+        {/* Background Glow */}
 
         <div className="pointer-events-none absolute left-[-120px] top-20 h-80 w-80 rounded-full bg-pink-200/30 blur-3xl" />
 
@@ -106,11 +161,9 @@ function HomeContent() {
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-          {/* ================= HEADER ================= */}
+          {/* Header */}
 
           <div className="mb-12 text-center sm:mb-16">
-
-            {/* Premium Badge */}
 
             <div className="inline-flex items-center gap-2 rounded-full border border-pink-200/80 bg-pink-50/70 px-4 py-2 shadow-sm backdrop-blur">
 
@@ -130,8 +183,6 @@ function HomeContent() {
 
             </div>
 
-            {/* Heading */}
-
             <h2 className="mt-5 font-serif text-4xl font-semibold tracking-tight text-maroon-950 sm:text-5xl">
 
               Featured
@@ -141,8 +192,6 @@ function HomeContent() {
               </span>
 
             </h2>
-
-            {/* Decorative Divider */}
 
             <div className="mx-auto mt-6 flex items-center justify-center gap-3">
 
@@ -162,24 +211,21 @@ function HomeContent() {
 
             </div>
 
-            {/* Description */}
-
             <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-maroon-900/60 sm:text-base">
 
-              Discover our most loved ethnic styles, thoughtfully selected
-              to make every celebration feel truly unforgettable.
+              Discover our most loved ethnic styles,
+              thoughtfully selected to make every
+              celebration feel truly unforgettable.
 
             </p>
 
           </div>
 
-          {/* ================= PRODUCTS ================= */}
+          {/* Products */}
 
           {products.length ? (
 
             <div className="relative">
-
-              {/* Product Grid */}
 
               <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 lg:gap-8">
 
@@ -198,8 +244,6 @@ function HomeContent() {
 
           ) : (
 
-            /* Empty State */
-
             <div className="mx-auto max-w-md rounded-3xl border border-pink-200/70 bg-pink-50/60 px-6 py-12 text-center shadow-sm backdrop-blur">
 
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-pink-200 to-rose-200">
@@ -216,7 +260,10 @@ function HomeContent() {
               </h3>
 
               <p className="mt-3 text-sm leading-6 text-maroon-900/60">
-                Our latest masterpieces will be added to the collection soon.
+
+                Our latest masterpieces will be added
+                to the collection soon.
+
               </p>
 
             </div>
@@ -227,25 +274,38 @@ function HomeContent() {
 
       </section>
 
-      {/* Brand Fashion Video */}
+      {/* =====================================================
+          BRAND VIDEO
+      ===================================================== */}
+
       <VideoSection />
 
-      {/* Explore Colors */}
+      {/* =====================================================
+          EXPLORE COLORS
+      ===================================================== */}
 
       <ExploreColors />
 
-      {/* About Brand */}
+      {/* =====================================================
+          ABOUT BRAND
+      ===================================================== */}
 
       <AboutSection />
 
-      {/* Customer Testimonials */}
+      {/* =====================================================
+          CUSTOMER TESTIMONIALS
 
-      {!testimonialsLoading &&
-  testimonials.length > 0 && (
-    <Testimonials
-      testimonials={testimonials}
-    />
-)}
+          Only show if approved testimonials exist
+      ===================================================== */}
+
+      {testimonialsLoaded &&
+        testimonials.length > 0 && (
+
+          <Testimonials
+            testimonials={testimonials}
+          />
+
+        )}
 
     </main>
   );
