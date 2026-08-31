@@ -73,9 +73,9 @@ export default function ChangePasswordModal({
       return;
     }
 
-    if (newPassword.length < 6) {
+    if (newPassword.length < 8) {
       setError(
-        'Your new password must contain at least 6 characters.'
+        'Your new password must contain at least 8 characters.'
       );
       return;
     }
@@ -113,7 +113,7 @@ export default function ChangePasswordModal({
         }
       );
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
         throw new Error(
@@ -155,7 +155,6 @@ export default function ChangePasswordModal({
       aria-modal="true"
       aria-labelledby="change-password-title"
     >
-      {/* Click Outside */}
       <button
         type="button"
         onClick={handleClose}
@@ -163,8 +162,6 @@ export default function ChangePasswordModal({
         className="absolute inset-0 h-full w-full cursor-default"
         aria-label="Close modal"
       />
-
-      {/* ================= MODAL ================= */}
 
       <div
         className="
@@ -181,8 +178,6 @@ export default function ChangePasswordModal({
           sm:rounded-[30px]
         "
       >
-        {/* ================= HEADER ================= */}
-
         <div
           className="
             relative overflow-hidden
@@ -194,8 +189,6 @@ export default function ChangePasswordModal({
             sm:px-7 sm:py-8
           "
         >
-          {/* Decorative Glow */}
-
           <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-pink-400/10 blur-3xl" />
 
           <div className="relative flex items-start justify-between gap-4">
@@ -213,47 +206,21 @@ export default function ChangePasswordModal({
                 <KeyRound size={21} />
               </div>
 
-              <p
-                className="
-                  mt-4
-                  text-[9px]
-                  font-bold
-                  uppercase
-                  tracking-[0.24em]
-                  text-pink-300
-                  sm:text-[10px]
-                "
-              >
+              <p className="mt-4 text-[9px] font-bold uppercase tracking-[0.24em] text-pink-300 sm:text-[10px]">
                 Account Security
               </p>
 
               <h2
                 id="change-password-title"
-                className="
-                  mt-2
-                  font-serif
-                  text-2xl
-                  text-white
-                  sm:text-3xl
-                "
+                className="mt-2 font-serif text-2xl text-white sm:text-3xl"
               >
                 Change Password
               </h2>
 
-              <p
-                className="
-                  mt-2
-                  text-xs
-                  leading-5
-                  text-pink-100/80
-                  sm:text-sm
-                "
-              >
+              <p className="mt-2 text-xs leading-5 text-pink-100/80 sm:text-sm">
                 Keep your Jannat Elegance account secure.
               </p>
             </div>
-
-            {/* Close Button */}
 
             <button
               type="button"
@@ -276,8 +243,6 @@ export default function ChangePasswordModal({
           </div>
         </div>
 
-        {/* ================= FORM ================= */}
-
         <form
           onSubmit={handleSubmit}
           className="
@@ -288,57 +253,23 @@ export default function ChangePasswordModal({
             sm:px-7 sm:py-8
           "
         >
-          {/* Error */}
-
           {error && (
-            <div
-              className="
-                mb-5
-                rounded-2xl
-                border border-red-200
-                bg-red-50
-                px-4 py-3
-                text-xs
-                leading-5
-                text-red-700
-                sm:text-sm
-              "
-            >
+            <div className="mb-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs leading-5 text-red-700 sm:text-sm">
               {error}
             </div>
           )}
 
-          {/* ================= CURRENT PASSWORD ================= */}
+          {/* CURRENT PASSWORD */}
 
           <div>
             <label
               htmlFor="current-password"
-              className="
-                mb-2 block
-                text-[10px]
-                font-bold
-                uppercase
-                tracking-[0.12em]
-                text-maroon-900
-                sm:text-xs
-              "
+              className="mb-2 block text-[10px] font-bold uppercase tracking-[0.12em] text-maroon-900 sm:text-xs"
             >
               Current Password
             </label>
 
-            <div
-              className="
-                flex items-center
-                rounded-2xl
-                border border-pink-200
-                bg-white/50
-                px-4
-                transition
-                focus-within:border-rose-400
-                focus-within:ring-4
-                focus-within:ring-pink-100
-              "
-            >
+            <div className="flex items-center rounded-2xl border border-pink-200 bg-white/50 px-4 transition focus-within:border-rose-400 focus-within:ring-4 focus-within:ring-pink-100">
               <Lock
                 size={18}
                 className="shrink-0 text-pink-400"
@@ -354,23 +285,12 @@ export default function ChangePasswordModal({
                 }
                 value={currentPassword}
                 onChange={(event) => {
-                  setCurrentPassword(
-                    event.target.value
-                  );
+                  setCurrentPassword(event.target.value);
                   setError('');
                 }}
                 placeholder="Enter your current password"
                 autoComplete="current-password"
-                className="
-                  h-12 min-w-0 flex-1
-                  bg-transparent
-                  px-3
-                  text-sm
-                  text-maroon-950
-                  outline-none
-                  placeholder:text-gray-400
-                  sm:h-14
-                "
+                className="h-12 min-w-0 flex-1 bg-transparent px-3 text-sm text-maroon-950 outline-none placeholder:text-gray-400 sm:h-14"
               />
 
               <button
@@ -380,12 +300,7 @@ export default function ChangePasswordModal({
                     !showCurrentPassword
                   )
                 }
-                className="
-                  shrink-0
-                  text-gray-400
-                  transition
-                  hover:text-maroon-800
-                "
+                className="shrink-0 text-gray-400 transition hover:text-maroon-800"
                 aria-label="Toggle current password visibility"
               >
                 {showCurrentPassword ? (
@@ -397,37 +312,17 @@ export default function ChangePasswordModal({
             </div>
           </div>
 
-          {/* ================= NEW PASSWORD ================= */}
+          {/* NEW PASSWORD */}
 
           <div className="mt-5">
             <label
               htmlFor="new-password"
-              className="
-                mb-2 block
-                text-[10px]
-                font-bold
-                uppercase
-                tracking-[0.12em]
-                text-maroon-900
-                sm:text-xs
-              "
+              className="mb-2 block text-[10px] font-bold uppercase tracking-[0.12em] text-maroon-900 sm:text-xs"
             >
               New Password
             </label>
 
-            <div
-              className="
-                flex items-center
-                rounded-2xl
-                border border-pink-200
-                bg-white/50
-                px-4
-                transition
-                focus-within:border-rose-400
-                focus-within:ring-4
-                focus-within:ring-pink-100
-              "
-            >
+            <div className="flex items-center rounded-2xl border border-pink-200 bg-white/50 px-4 transition focus-within:border-rose-400 focus-within:ring-4 focus-within:ring-pink-100">
               <Lock
                 size={18}
                 className="shrink-0 text-pink-400"
@@ -436,7 +331,7 @@ export default function ChangePasswordModal({
               <input
                 id="new-password"
                 required
-                minLength={6}
+                minLength={8}
                 type={
                   showNewPassword
                     ? 'text'
@@ -444,38 +339,20 @@ export default function ChangePasswordModal({
                 }
                 value={newPassword}
                 onChange={(event) => {
-                  setNewPassword(
-                    event.target.value
-                  );
+                  setNewPassword(event.target.value);
                   setError('');
                 }}
                 placeholder="Create a new password"
                 autoComplete="new-password"
-                className="
-                  h-12 min-w-0 flex-1
-                  bg-transparent
-                  px-3
-                  text-sm
-                  text-maroon-950
-                  outline-none
-                  placeholder:text-gray-400
-                  sm:h-14
-                "
+                className="h-12 min-w-0 flex-1 bg-transparent px-3 text-sm text-maroon-950 outline-none placeholder:text-gray-400 sm:h-14"
               />
 
               <button
                 type="button"
                 onClick={() =>
-                  setShowNewPassword(
-                    !showNewPassword
-                  )
+                  setShowNewPassword(!showNewPassword)
                 }
-                className="
-                  shrink-0
-                  text-gray-400
-                  transition
-                  hover:text-maroon-800
-                "
+                className="shrink-0 text-gray-400 transition hover:text-maroon-800"
                 aria-label="Toggle new password visibility"
               >
                 {showNewPassword ? (
@@ -487,37 +364,17 @@ export default function ChangePasswordModal({
             </div>
           </div>
 
-          {/* ================= CONFIRM PASSWORD ================= */}
+          {/* CONFIRM PASSWORD */}
 
           <div className="mt-5">
             <label
               htmlFor="confirm-password"
-              className="
-                mb-2 block
-                text-[10px]
-                font-bold
-                uppercase
-                tracking-[0.12em]
-                text-maroon-900
-                sm:text-xs
-              "
+              className="mb-2 block text-[10px] font-bold uppercase tracking-[0.12em] text-maroon-900 sm:text-xs"
             >
               Confirm New Password
             </label>
 
-            <div
-              className="
-                flex items-center
-                rounded-2xl
-                border border-pink-200
-                bg-white/50
-                px-4
-                transition
-                focus-within:border-rose-400
-                focus-within:ring-4
-                focus-within:ring-pink-100
-              "
-            >
+            <div className="flex items-center rounded-2xl border border-pink-200 bg-white/50 px-4 transition focus-within:border-rose-400 focus-within:ring-4 focus-within:ring-pink-100">
               <Lock
                 size={18}
                 className="shrink-0 text-pink-400"
@@ -526,7 +383,7 @@ export default function ChangePasswordModal({
               <input
                 id="confirm-password"
                 required
-                minLength={6}
+                minLength={8}
                 type={
                   showConfirmPassword
                     ? 'text'
@@ -534,23 +391,12 @@ export default function ChangePasswordModal({
                 }
                 value={confirmPassword}
                 onChange={(event) => {
-                  setConfirmPassword(
-                    event.target.value
-                  );
+                  setConfirmPassword(event.target.value);
                   setError('');
                 }}
                 placeholder="Confirm your new password"
                 autoComplete="new-password"
-                className="
-                  h-12 min-w-0 flex-1
-                  bg-transparent
-                  px-3
-                  text-sm
-                  text-maroon-950
-                  outline-none
-                  placeholder:text-gray-400
-                  sm:h-14
-                "
+                className="h-12 min-w-0 flex-1 bg-transparent px-3 text-sm text-maroon-950 outline-none placeholder:text-gray-400 sm:h-14"
               />
 
               <button
@@ -560,12 +406,7 @@ export default function ChangePasswordModal({
                     !showConfirmPassword
                   )
                 }
-                className="
-                  shrink-0
-                  text-gray-400
-                  transition
-                  hover:text-maroon-800
-                "
+                className="shrink-0 text-gray-400 transition hover:text-maroon-800"
                 aria-label="Toggle confirm password visibility"
               >
                 {showConfirmPassword ? (
@@ -577,34 +418,18 @@ export default function ChangePasswordModal({
             </div>
 
             <p className="mt-3 text-[11px] leading-5 text-gray-500 sm:text-xs">
-              Use at least 6 characters for your new password.
+              Use at least 8 characters for your new password.
             </p>
           </div>
 
-          {/* ================= ACTIONS ================= */}
+          {/* ACTIONS */}
 
           <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row">
             <button
               type="button"
               onClick={handleClose}
               disabled={loading}
-              className="
-                flex h-12 flex-1
-                items-center justify-center
-                rounded-full
-                border border-pink-200
-                bg-transparent
-                text-xs
-                font-bold
-                uppercase
-                tracking-wider
-                text-maroon-900
-                transition
-                hover:bg-pink-50
-                active:scale-[0.98]
-                disabled:opacity-50
-                sm:h-14
-              "
+              className="flex h-12 flex-1 items-center justify-center rounded-full border border-pink-200 bg-transparent text-xs font-bold uppercase tracking-wider text-maroon-900 transition hover:bg-pink-50 active:scale-[0.98] disabled:opacity-50 sm:h-14"
             >
               Cancel
             </button>
@@ -612,31 +437,7 @@ export default function ChangePasswordModal({
             <button
               type="submit"
               disabled={loading}
-              className="
-                flex h-12 flex-1
-                items-center justify-center
-                gap-2
-                rounded-full
-                bg-gradient-to-r
-                from-maroon-950
-                via-rose-900
-                to-pink-600
-                text-xs
-                font-bold
-                uppercase
-                tracking-wider
-                text-white
-                shadow-lg
-                shadow-rose-900/20
-                transition-all
-                hover:-translate-y-0.5
-                hover:shadow-xl
-                active:scale-[0.98]
-                disabled:cursor-not-allowed
-                disabled:opacity-60
-                disabled:hover:translate-y-0
-                sm:h-14
-              "
+              className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-maroon-950 via-rose-900 to-pink-600 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-rose-900/20 transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 sm:h-14"
             >
               {loading ? (
                 <>

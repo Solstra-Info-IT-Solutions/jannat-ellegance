@@ -31,10 +31,13 @@ export default function DeleteAccountModal({
 
     setConfirmation('');
     setError('');
+
     onClose();
   };
 
-  const handleDelete = async (event: FormEvent) => {
+  const handleDelete = async (
+    event: FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
 
     setError('');
@@ -47,22 +50,33 @@ export default function DeleteAccountModal({
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/delete-account', {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          confirmation: 'DELETE',
-        }),
-      });
+      const response = await fetch(
+        '/api/auth/delete-account',
+        {
+          method: 'DELETE',
 
-      const data = await response.json();
+          credentials: 'include',
+
+          headers: {
+            'Content-Type': 'application/json',
+          },
+
+          body: JSON.stringify({
+            confirmation: 'DELETE',
+          }),
+        }
+      );
+
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        throw new Error(data.error || 'Unable to delete your account.');
+        throw new Error(
+          data.error || 'Unable to delete your account.'
+        );
       }
+
+      setConfirmation('');
+      setError('');
 
       onDeleted();
     } catch (reason) {
@@ -91,7 +105,8 @@ export default function DeleteAccountModal({
       aria-modal="true"
       aria-labelledby="delete-account-title"
     >
-      {/* Click outside to close */}
+      {/* Click outside */}
+
       <button
         type="button"
         onClick={handleClose}
@@ -99,8 +114,6 @@ export default function DeleteAccountModal({
         className="absolute inset-0 h-full w-full cursor-default"
         aria-label="Close modal"
       />
-
-      {/* ================= MODAL ================= */}
 
       <div
         className="
@@ -117,18 +130,15 @@ export default function DeleteAccountModal({
           sm:rounded-[30px]
         "
       >
-
-        {/* ================= HEADER ================= */}
+        {/* HEADER */}
 
         <div className="relative overflow-hidden bg-gradient-to-br from-maroon-950 via-[#7d102d] to-[#b42345] px-5 py-6 sm:px-7 sm:py-8">
 
-          {/* Decorative glow */}
           <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-red-400/10 blur-3xl" />
 
           <div className="relative flex items-start justify-between gap-4">
 
             <div>
-              {/* Icon */}
               <div className="grid h-11 w-11 place-items-center rounded-2xl border border-white/10 bg-white/10 text-red-100 backdrop-blur">
                 <ShieldAlert size={21} />
               </div>
@@ -149,20 +159,15 @@ export default function DeleteAccountModal({
               </p>
             </div>
 
-            {/* Close */}
             <button
               type="button"
               onClick={handleClose}
               disabled={loading}
               className="
                 grid h-10 w-10 shrink-0 place-items-center
-                rounded-full
-                bg-white/10
-                text-white
-                transition
-                hover:bg-white/20
-                active:scale-95
-                disabled:opacity-50
+                rounded-full bg-white/10 text-white
+                transition hover:bg-white/20
+                active:scale-95 disabled:opacity-50
               "
               aria-label="Close"
             >
@@ -172,7 +177,7 @@ export default function DeleteAccountModal({
           </div>
         </div>
 
-        {/* ================= CONTENT ================= */}
+        {/* FORM */}
 
         <form
           onSubmit={handleDelete}
@@ -184,8 +189,6 @@ export default function DeleteAccountModal({
             sm:px-7 sm:py-8
           "
         >
-
-          {/* Warning Card */}
 
           <div className="flex gap-3 rounded-2xl border border-red-100 bg-red-50/80 px-4 py-4">
 
@@ -199,34 +202,20 @@ export default function DeleteAccountModal({
               </p>
 
               <p className="mt-1 text-xs leading-5 text-red-700/80">
-                Your account and associated profile information may be
-                permanently removed according to your backend configuration.
+                Your account and associated information will be permanently
+                removed.
               </p>
             </div>
 
           </div>
 
-          {/* Error */}
-
           {error && (
-            <div
-              className="
-                mt-5
-                rounded-2xl
-                border border-red-200
-                bg-red-50
-                px-4 py-3
-                text-xs
-                leading-5
-                text-red-700
-                sm:text-sm
-              "
-            >
+            <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs leading-5 text-red-700 sm:text-sm">
               {error}
             </div>
           )}
 
-          {/* ================= CONFIRM INPUT ================= */}
+          {/* CONFIRM */}
 
           <label className="mt-6 block">
 
@@ -250,23 +239,18 @@ export default function DeleteAccountModal({
               }}
               placeholder="Type DELETE here"
               autoComplete="off"
+              disabled={loading}
               className="
-                mt-3
-                h-12
-                w-full
-                rounded-2xl
-                border border-red-200
-                bg-white/60
-                px-4
-                text-sm font-semibold
-                text-maroon-950
-                outline-none
-                transition
+                mt-3 h-12 w-full rounded-2xl
+                border border-red-200 bg-white/60
+                px-4 text-sm font-semibold
+                text-maroon-950 outline-none transition
                 placeholder:font-normal
                 placeholder:text-gray-400
                 focus:border-red-400
                 focus:ring-4
                 focus:ring-red-100
+                disabled:opacity-60
                 sm:h-14
               "
             />
@@ -277,11 +261,9 @@ export default function DeleteAccountModal({
             Please make sure you understand that this action cannot be reversed.
           </p>
 
-          {/* ================= ACTIONS ================= */}
+          {/* ACTIONS */}
 
           <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row">
-
-            {/* Keep Account */}
 
             <button
               type="button"
@@ -289,47 +271,28 @@ export default function DeleteAccountModal({
               disabled={loading}
               className="
                 flex h-12 flex-1 items-center justify-center
-                rounded-full
-                border border-maroon-200
-                bg-transparent
-                px-5
-                text-xs
-                font-bold
-                uppercase
-                tracking-wider
-                text-maroon-800
-                transition
-                hover:bg-maroon-50
+                rounded-full border border-maroon-200
+                bg-transparent px-5 text-xs font-bold
+                uppercase tracking-wider text-maroon-800
+                transition hover:bg-maroon-50
                 active:scale-[0.98]
-                disabled:opacity-50
-                sm:h-14
+                disabled:opacity-50 sm:h-14
               "
             >
               Keep Account
             </button>
-
-            {/* Delete */}
 
             <button
               type="submit"
               disabled={loading || confirmation !== 'DELETE'}
               className="
                 flex h-12 flex-1 items-center justify-center gap-2
-                rounded-full
-                bg-gradient-to-r
-                from-red-700
-                via-red-600
-                to-rose-600
-                px-5
-                text-xs
-                font-bold
-                uppercase
-                tracking-wider
-                text-white
-                shadow-lg shadow-red-500/20
-                transition-all
-                hover:-translate-y-0.5
-                hover:shadow-xl
+                rounded-full bg-gradient-to-r
+                from-red-700 via-red-600 to-rose-600
+                px-5 text-xs font-bold uppercase
+                tracking-wider text-white shadow-lg
+                shadow-red-500/20 transition-all
+                hover:-translate-y-0.5 hover:shadow-xl
                 active:scale-[0.98]
                 disabled:cursor-not-allowed
                 disabled:opacity-40
@@ -356,7 +319,6 @@ export default function DeleteAccountModal({
           </div>
 
         </form>
-
       </div>
     </div>
   );

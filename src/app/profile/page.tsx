@@ -7,7 +7,6 @@ import {
   AlertTriangle,
   Camera,
   KeyRound,
-  LockKeyhole,
   MapPin,
   Pencil,
   ShieldCheck,
@@ -69,29 +68,39 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-  const [changePasswordOpen, setChangePasswordOpen] =
-    useState(false);
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+  const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
 
-  const [deleteAccountOpen, setDeleteAccountOpen] =
-    useState(false);
+  /* ================= LOAD ADDRESSES ================= */
 
-  const loadAddresses = () =>
-    fetch('/api/addresses', {
-      credentials: 'include',
-    })
-      .then((response) =>
-        response.ok ? response.json() : null
-      )
-      .then((data) =>
-        setAddresses(data?.addresses || [])
-      )
-      .catch(() => setAddresses([]));
+  const loadAddresses = async () => {
+    try {
+      const response = await fetch('/api/addresses', {
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        setAddresses([]);
+        return;
+      }
+
+      const data = await response.json();
+
+      setAddresses(data?.addresses || []);
+    } catch {
+      setAddresses([]);
+    }
+  };
+
+  /* ================= AUTH CHECK ================= */
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.replace('/login?callbackUrl=/profile');
     }
   }, [status, router]);
+
+  /* ================= LOAD PROFILE ================= */
 
   useEffect(() => {
     if (!user) return;
@@ -102,19 +111,21 @@ export default function ProfilePage() {
     void loadAddresses();
   }, [user?.id]);
 
+  /* ================= AUTO HIDE MESSAGE ================= */
+
   useEffect(() => {
     if (!message) return;
 
-    const timer = setTimeout(() => {
+    const timer = window.setTimeout(() => {
       setMessage('');
     }, 4000);
 
-    return () => clearTimeout(timer);
+    return () => window.clearTimeout(timer);
   }, [message]);
 
-  const saveProfile = async (
-    event: FormEvent
-  ) => {
+  /* ================= SAVE PROFILE ================= */
+
+  const saveProfile = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setError('');
@@ -129,7 +140,7 @@ export default function ProfilePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name,
+          name: name.trim(),
           phone,
         }),
       });
@@ -137,24 +148,26 @@ export default function ProfilePage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.error || 'Unable to update profile'
-        );
+        throw new Error(data.error || 'Unable to update profile.');
       }
 
-      updateUser(data.user);
+      if (data.user) {
+        updateUser(data.user);
+      }
 
-      setMessage('Profile updated successfully.');
+      setMessage(data.message || 'Profile updated successfully.');
     } catch (reason) {
       setError(
         reason instanceof Error
           ? reason.message
-          : 'Unable to update profile'
+          : 'Unable to update profile.'
       );
     } finally {
       setSaving(false);
     }
   };
+
+  /* ================= UPLOAD AVATAR ================= */
 
   const uploadAvatar = async (
     event: ChangeEvent<HTMLInputElement>
@@ -164,18 +177,20 @@ export default function ProfilePage() {
     if (!file) return;
 
     setError('');
+    setMessage('');
+
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+    ];
 
     if (
-      ![
-        'image/jpeg',
-        'image/png',
-        'image/webp',
-      ].includes(file.type) ||
+      !allowedTypes.includes(file.type) ||
       file.size > 5 * 1024 * 1024
     ) {
-      setError(
-        'Choose a JPG, PNG, or WebP image up to 5 MB.'
-      );
+      setError('Choose a JPG, PNG, or WebP image up to 5 MB.');
+      event.target.value = '';
       return;
     }
 
@@ -186,79 +201,80 @@ export default function ProfilePage() {
 
       body.append('avatar', file);
 
-      const response = await fetch(
-        '/api/profile/avatar',
-        {
-          method: 'POST',
-          credentials: 'include',
-          body,
-        }
-      );
+      const response = await fetch('/api/profile/avatar', {
+        method: 'POST',
+        credentials: 'include',
+        body,
+      });
 
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data.error ||
-            'Unable to upload profile photo'
+          data.error || 'Unable to upload profile photo.'
         );
       }
 
-      updateUser(data.user);
+      if (data.user) {
+        updateUser(data.user);
+      }
 
-      setMessage('Profile photo updated successfully.');
+      setMessage(
+        data.message || 'Profile photo updated successfully.'
+      );
     } catch (reason) {
       setError(
         reason instanceof Error
           ? reason.message
-          : 'Unable to upload profile photo'
+          : 'Unable to upload profile photo.'
       );
     } finally {
       setUploading(false);
-
       event.target.value = '';
     }
   };
 
+  /* ================= REMOVE AVATAR ================= */
+
   const removeAvatar = async () => {
     setError('');
+    setMessage('');
 
     try {
-      const response = await fetch(
-        '/api/profile/avatar',
-        {
-          method: 'DELETE',
-          credentials: 'include',
-        }
-      );
+      const response = await fetch('/api/profile/avatar', {
+        method: 'DELETE',
+        credentials: 'include',
+      });
 
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data.error ||
-            'Unable to remove profile photo'
+          data.error || 'Unable to remove profile photo.'
         );
       }
 
-      updateUser(data.user);
+      if (data.user) {
+        updateUser(data.user);
+      }
 
-      setMessage('Profile photo removed.');
+      setMessage(data.message || 'Profile photo removed.');
     } catch (reason) {
       setError(
         reason instanceof Error
           ? reason.message
-          : 'Unable to remove profile photo'
+          : 'Unable to remove profile photo.'
       );
     }
   };
 
-  const saveAddress = async (
-    event: FormEvent
-  ) => {
+  /* ================= SAVE ADDRESS ================= */
+
+  const saveAddress = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setError('');
+    setMessage('');
 
     try {
       const endpoint = editingId
@@ -267,22 +283,17 @@ export default function ProfilePage() {
 
       const response = await fetch(endpoint, {
         method: editingId ? 'PATCH' : 'POST',
-
         credentials: 'include',
-
         headers: {
           'Content-Type': 'application/json',
         },
-
         body: JSON.stringify(address),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.error || 'Unable to save address'
-        );
+        throw new Error(data.error || 'Unable to save address.');
       }
 
       const wasEditing = Boolean(editingId);
@@ -293,20 +304,26 @@ export default function ProfilePage() {
       await loadAddresses();
 
       setMessage(
-        wasEditing
-          ? 'Address updated successfully.'
-          : 'Address saved successfully.'
+        data.message ||
+          (wasEditing
+            ? 'Address updated successfully.'
+            : 'Address saved successfully.')
       );
     } catch (reason) {
       setError(
         reason instanceof Error
           ? reason.message
-          : 'Unable to save address'
+          : 'Unable to save address.'
       );
     }
   };
 
+  /* ================= EDIT ADDRESS ================= */
+
   const beginEdit = (item: Address) => {
+    setError('');
+    setMessage('');
+
     setEditingId(item.id || item._id || '');
 
     setAddress({
@@ -320,65 +337,87 @@ export default function ProfilePage() {
       isDefault: Boolean(item.isDefault),
     });
 
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: 'smooth',
-    });
+    window.setTimeout(() => {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth',
+      });
+    }, 100);
   };
 
+  /* ================= REMOVE ADDRESS ================= */
+
   const removeAddress = async (id: string) => {
+    if (!id) return;
+
     setError('');
+    setMessage('');
 
     try {
-      const response = await fetch(
-        `/api/addresses/${id}`,
-        {
-          method: 'DELETE',
-          credentials: 'include',
-        }
-      );
+      const response = await fetch(`/api/addresses/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      const data = await response.json().catch(() => null);
 
       if (!response.ok) {
         throw new Error(
-          'Unable to remove address'
+          data?.error || 'Unable to remove address.'
         );
       }
 
       await loadAddresses();
 
-      setMessage('Address removed successfully.');
+      setMessage(
+        data?.message || 'Address removed successfully.'
+      );
     } catch (reason) {
       setError(
         reason instanceof Error
           ? reason.message
-          : 'Unable to remove address'
+          : 'Unable to remove address.'
       );
     }
   };
 
+  /* ================= CHANGE PASSWORD SUCCESS ================= */
+
+  const handlePasswordSuccess = (successMessage: string) => {
+    setError('');
+    setMessage(successMessage);
+    setChangePasswordOpen(false);
+  };
+
+  /* ================= DELETE ACCOUNT SUCCESS ================= */
+
   const handleAccountDeleted = async () => {
+    setDeleteAccountOpen(false);
+
     try {
       await logout();
+    } catch {
+      // Account is already deleted from backend.
     } finally {
       router.replace('/');
+      router.refresh();
     }
   };
+
+  /* ================= LOADING ================= */
 
   if (status === 'loading' || !user) {
     return (
       <main className="grid min-h-[60vh] place-items-center bg-[#fff8fa] text-sm text-gray-500">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-maroon-200 border-t-maroon-800" />
-
           Loading profile…
         </div>
       </main>
     );
   }
 
-  const initials = (
-    user.name || user.email
-  )
+  const initials = (user.name || user.email)
     .slice(0, 1)
     .toUpperCase();
 
@@ -387,7 +426,7 @@ export default function ProfilePage() {
       <main className="min-h-screen bg-[#fff8fa] py-10 sm:py-14">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
 
-          {/* ================= HEADER ================= */}
+          {/* HEADER */}
 
           <div className="flex items-center gap-2 text-pink-600">
             <span className="h-px w-8 bg-pink-300" />
@@ -402,11 +441,11 @@ export default function ProfilePage() {
           </h1>
 
           <p className="mt-3 max-w-xl text-sm leading-6 text-gray-500">
-            Manage your personal details, delivery
-            addresses and account security in one place.
+            Manage your personal details, delivery addresses and
+            account security in one place.
           </p>
 
-          {/* ================= ALERTS ================= */}
+          {/* ALERTS */}
 
           {error && (
             <div
@@ -426,7 +465,7 @@ export default function ProfilePage() {
 
           <div className="mt-9 grid gap-7 lg:grid-cols-[340px_1fr]">
 
-            {/* ================= LEFT PROFILE CARD ================= */}
+            {/* PROFILE CARD */}
 
             <aside className="h-fit overflow-hidden rounded-[28px] border border-maroon-100 bg-[#fffafb] shadow-sm">
 
@@ -436,9 +475,8 @@ export default function ProfilePage() {
 
               <div className="px-7 pb-8 text-center">
 
-                {/* Avatar */}
-
                 <div className="relative mx-auto -mt-12 h-28 w-28">
+
                   <div className="absolute inset-0 rounded-full bg-gradient-to-br from-pink-300 via-rose-400 to-maroon-800 p-[3px]">
 
                     <div className="grid h-full w-full place-items-center overflow-hidden rounded-full bg-[#fff8fa]">
@@ -456,9 +494,10 @@ export default function ProfilePage() {
                       )}
 
                     </div>
+
                   </div>
 
-                  <label className="absolute -bottom-1 -right-1 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-4 border-[#fff8fa] bg-maroon-850 text-white shadow-md transition hover:scale-105 hover:bg-maroon-900">
+                  <label className="absolute -bottom-1 -right-1 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-4 border-[#fff8fa] bg-maroon-800 text-white shadow-md transition hover:scale-105 hover:bg-maroon-900">
 
                     <Camera size={15} />
 
@@ -471,6 +510,7 @@ export default function ProfilePage() {
                     />
 
                   </label>
+
                 </div>
 
                 <h2 className="mt-5 font-serif text-2xl text-maroon-950">
@@ -486,6 +526,7 @@ export default function ProfilePage() {
                 </p>
 
                 <div className="mt-6 flex items-center justify-center gap-1.5 text-xs text-gray-400">
+
                   <Sparkles
                     size={12}
                     className="text-pink-400"
@@ -494,31 +535,35 @@ export default function ProfilePage() {
                   {uploading
                     ? 'Uploading photo…'
                     : 'JPG, PNG or WebP · max 5 MB'}
+
                 </div>
 
                 {user.avatarUrl && (
                   <button
                     type="button"
                     onClick={removeAvatar}
-                    className="mt-4 text-xs font-bold uppercase tracking-wider text-red-500 transition hover:text-red-700"
+                    disabled={uploading}
+                    className="mt-4 text-xs font-bold uppercase tracking-wider text-red-500 transition hover:text-red-700 disabled:opacity-50"
                   >
                     Remove profile photo
                   </button>
                 )}
 
               </div>
+
             </aside>
 
-            {/* ================= RIGHT CONTENT ================= */}
+            {/* RIGHT CONTENT */}
 
             <section className="space-y-7">
 
-              {/* ================= PROFILE DETAILS ================= */}
+              {/* PROFILE DETAILS */}
 
               <form
                 onSubmit={saveProfile}
                 className="rounded-[28px] border border-maroon-100 bg-[#fffafb] p-6 shadow-sm sm:p-8"
               >
+
                 <div className="flex items-center gap-2.5">
 
                   <span className="grid h-9 w-9 place-items-center rounded-full bg-maroon-50 text-maroon-800">
@@ -579,293 +624,18 @@ export default function ProfilePage() {
                 </p>
 
                 <button
+                  type="submit"
                   disabled={saving}
                   className="mt-6 rounded-full bg-gradient-to-r from-rose-500 to-pink-600 px-7 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:shadow-lg disabled:opacity-50"
                 >
-                  {saving
-                    ? 'Saving…'
-                    : 'Save Profile'}
+                  {saving ? 'Saving…' : 'Save Profile'}
                 </button>
 
               </form>
 
-              {/* ================= SAVED ADDRESSES ================= */}
-
-              <section className="rounded-[28px] border border-maroon-100 bg-[#fffafb] p-6 shadow-sm sm:p-8">
-
-                <div className="flex items-center gap-2.5">
-
-                  <span className="grid h-9 w-9 place-items-center rounded-full bg-maroon-50 text-maroon-800">
-                    <MapPin size={18} />
-                  </span>
-
-                  <h2 className="font-serif text-2xl text-maroon-950">
-                    Saved Addresses
-                  </h2>
-
-                </div>
-
-                {addresses.length ? (
-
-                  <div className="mt-6 grid gap-3 sm:grid-cols-2">
-
-                    {addresses.map((item) => {
-                      const id =
-                        item.id ||
-                        item._id ||
-                        '';
-
-                      return (
-                        <article
-                          key={id}
-                          className="flex flex-col justify-between rounded-2xl border border-maroon-100 bg-maroon-50/40 p-4 transition hover:border-maroon-200"
-                        >
-
-                          <div>
-
-                            <div className="flex items-center gap-2">
-
-                              <p className="font-semibold text-maroon-950">
-                                {item.name}
-                              </p>
-
-                              {item.isDefault && (
-                                <span className="rounded-full bg-pink-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-pink-600">
-                                  Default
-                                </span>
-                              )}
-
-                            </div>
-
-                            <p className="mt-1.5 text-xs leading-5 text-gray-600">
-
-                              {item.addressLine}
-
-                              {item.landmark
-                                ? `, ${item.landmark}`
-                                : ''}
-
-                              <br />
-
-                              {item.city},{' '}
-                              {item.state} –{' '}
-                              {item.pincode}
-
-                              <br />
-
-                              {item.phone}
-
-                            </p>
-
-                          </div>
-
-                          <div className="mt-3 flex gap-4 border-t border-maroon-100/70 pt-3">
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                beginEdit(item)
-                              }
-                              className="flex items-center gap-1 text-xs font-bold text-maroon-800 transition hover:text-maroon-950"
-                            >
-                              <Pencil size={13} />
-                              Edit
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                removeAddress(id)
-                              }
-                              className="flex items-center gap-1 text-xs font-bold text-red-500 transition hover:text-red-700"
-                            >
-                              <Trash2 size={13} />
-                              Remove
-                            </button>
-
-                          </div>
-
-                        </article>
-                      );
-                    })}
-
-                  </div>
-
-                ) : (
-
-                  <div className="mt-6 rounded-2xl border border-dashed border-maroon-200 bg-maroon-50/30 px-4 py-8 text-center">
-                    <p className="text-sm text-gray-500">
-                      No saved address yet — add one below
-                      for faster checkout.
-                    </p>
-                  </div>
-
-                )}
-
-                {/* ================= ADDRESS FORM ================= */}
-
-                <form
-                  onSubmit={saveAddress}
-                  className="mt-7 border-t border-maroon-100 pt-6"
-                >
-
-                  <div className="flex items-center justify-between">
-
-                    <p className="text-xs font-bold uppercase tracking-wider text-maroon-900">
-                      {editingId
-                        ? 'Edit Delivery Address'
-                        : 'Add a Delivery Address'}
-                    </p>
-
-                    {editingId && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setEditingId('');
-                          setAddress(blankAddress);
-                        }}
-                        className="text-xs font-bold text-maroon-800"
-                      >
-                        Cancel Edit
-                      </button>
-                    )}
-
-                  </div>
-
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
-
-                    <input
-                      required
-                      placeholder="Full name"
-                      value={address.name}
-                      onChange={(event) =>
-                        setAddress({
-                          ...address,
-                          name: event.target.value,
-                        })
-                      }
-                      className="rounded-xl border border-maroon-100 bg-[#fff8fa] p-3 text-sm outline-none focus:ring-2 focus:ring-maroon-100"
-                    />
-
-                    <input
-                      required
-                      placeholder="Phone number"
-                      value={address.phone}
-                      onChange={(event) =>
-                        setAddress({
-                          ...address,
-                          phone: event.target.value
-                            .replace(/\D/g, '')
-                            .slice(0, 10),
-                        })
-                      }
-                      className="rounded-xl border border-maroon-100 bg-[#fff8fa] p-3 text-sm outline-none focus:ring-2 focus:ring-maroon-100"
-                    />
-
-                    <input
-                      required
-                      placeholder="House / street / area"
-                      value={address.addressLine}
-                      onChange={(event) =>
-                        setAddress({
-                          ...address,
-                          addressLine:
-                            event.target.value,
-                        })
-                      }
-                      className="rounded-xl border border-maroon-100 bg-[#fff8fa] p-3 text-sm outline-none focus:ring-2 focus:ring-maroon-100 sm:col-span-2"
-                    />
-
-                    <input
-                      required
-                      placeholder="City"
-                      value={address.city}
-                      onChange={(event) =>
-                        setAddress({
-                          ...address,
-                          city: event.target.value,
-                        })
-                      }
-                      className="rounded-xl border border-maroon-100 bg-[#fff8fa] p-3 text-sm outline-none focus:ring-2 focus:ring-maroon-100"
-                    />
-
-                    <input
-                      required
-                      placeholder="State"
-                      value={address.state}
-                      onChange={(event) =>
-                        setAddress({
-                          ...address,
-                          state: event.target.value,
-                        })
-                      }
-                      className="rounded-xl border border-maroon-100 bg-[#fff8fa] p-3 text-sm outline-none focus:ring-2 focus:ring-maroon-100"
-                    />
-
-                    <input
-                      required
-                      placeholder="Pincode"
-                      value={address.pincode}
-                      onChange={(event) =>
-                        setAddress({
-                          ...address,
-                          pincode: event.target.value
-                            .replace(/\D/g, '')
-                            .slice(0, 6),
-                        })
-                      }
-                      className="rounded-xl border border-maroon-100 bg-[#fff8fa] p-3 text-sm outline-none focus:ring-2 focus:ring-maroon-100"
-                    />
-
-                    <input
-                      placeholder="Landmark (optional)"
-                      value={address.landmark}
-                      onChange={(event) =>
-                        setAddress({
-                          ...address,
-                          landmark:
-                            event.target.value,
-                        })
-                      }
-                      className="rounded-xl border border-maroon-100 bg-[#fff8fa] p-3 text-sm outline-none focus:ring-2 focus:ring-maroon-100"
-                    />
-
-                  </div>
-
-                  <label className="mt-4 flex items-center gap-2 text-sm text-maroon-900">
-
-                    <input
-                      type="checkbox"
-                      checked={address.isDefault}
-                      onChange={(event) =>
-                        setAddress({
-                          ...address,
-                          isDefault:
-                            event.target.checked,
-                        })
-                      }
-                      className="h-4 w-4 rounded border-maroon-200 text-maroon-800 focus:ring-maroon-200"
-                    />
-
-                    Make this my default delivery address
-
-                  </label>
-
-                  <button className="mt-5 rounded-full border border-maroon-800 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-maroon-800 transition hover:bg-maroon-800 hover:text-white">
-                    {editingId
-                      ? 'Update Address'
-                      : 'Save Address'}
-                  </button>
-
-                </form>
-
-              </section>
-
-              {/* ================= SECURITY SECTION ================= */}
+              {/* SECURITY */}
 
               <section className="overflow-hidden rounded-[28px] border border-maroon-100 bg-[#fffafb] shadow-sm">
-
-                {/* Header */}
 
                 <div className="border-b border-maroon-100 px-6 py-6 sm:px-8">
 
@@ -893,13 +663,14 @@ export default function ProfilePage() {
 
                 <div className="p-4 sm:p-5">
 
-                  {/* Change Password */}
+                  {/* CHANGE PASSWORD */}
 
                   <button
                     type="button"
-                    onClick={() =>
-                      setChangePasswordOpen(true)
-                    }
+                    onClick={() => {
+                      setError('');
+                      setChangePasswordOpen(true);
+                    }}
                     className="group flex w-full items-center justify-between rounded-2xl border border-maroon-100 bg-maroon-50/40 p-5 text-left transition hover:-translate-y-0.5 hover:border-pink-300 hover:bg-pink-50"
                   >
 
@@ -930,13 +701,14 @@ export default function ProfilePage() {
 
                   </button>
 
-                  {/* Delete Account */}
+                  {/* DELETE ACCOUNT */}
 
                   <button
                     type="button"
-                    onClick={() =>
-                      setDeleteAccountOpen(true)
-                    }
+                    onClick={() => {
+                      setError('');
+                      setDeleteAccountOpen(true);
+                    }}
                     className="group mt-4 flex w-full items-center justify-between rounded-2xl border border-red-100 bg-red-50/50 p-5 text-left transition hover:border-red-300 hover:bg-red-50"
                   >
 
@@ -975,26 +747,23 @@ export default function ProfilePage() {
             </section>
 
           </div>
+
         </div>
       </main>
 
-      {/* ================= MODALS ================= */}
+      {/* ================= CHANGE PASSWORD MODAL ================= */}
 
       <ChangePasswordModal
         open={changePasswordOpen}
-        onClose={() =>
-          setChangePasswordOpen(false)
-        }
-        onSuccess={(successMessage) =>
-          setMessage(successMessage)
-        }
+        onClose={() => setChangePasswordOpen(false)}
+        onSuccess={handlePasswordSuccess}
       />
+
+      {/* ================= DELETE ACCOUNT MODAL ================= */}
 
       <DeleteAccountModal
         open={deleteAccountOpen}
-        onClose={() =>
-          setDeleteAccountOpen(false)
-        }
+        onClose={() => setDeleteAccountOpen(false)}
         onDeleted={handleAccountDeleted}
       />
     </>
