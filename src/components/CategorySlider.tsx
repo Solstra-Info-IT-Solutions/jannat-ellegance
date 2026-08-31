@@ -104,27 +104,97 @@ return ( <section className="relative overflow-hidden bg-gradient-to-b from-[#ff
 
     <div className="relative">
 
-      {/* LEFT BUTTON */}
 
-      <button
-        type="button"
-        onClick={() => scroll('left')}
-        aria-label="Scroll categories left"
-        className="absolute left-0 top-[45%] z-30 hidden h-12 w-12 -translate-x-1/2 place-items-center rounded-full border border-pink-200 bg-white text-maroon-900 shadow-xl shadow-pink-100 transition-all duration-300 hover:scale-110 hover:border-pink-400 hover:bg-gradient-to-br hover:from-rose-900 hover:to-pink-600 hover:text-white md:grid"
-      >
-        <ChevronLeft size={22} />
-      </button>
+      {/* LEFT ARROW */}
 
-      {/* RIGHT BUTTON */}
+<button
+type="button"
+onClick={() => scroll('left')}
+aria-label="Scroll categories left"
+className="
+absolute
+left-0
+top-1/2
+z-30
+hidden
+h-12
+w-12
+-translate-x-1/2
+-translate-y-1/2
+items-center
+justify-center
+rounded-full
+border
+border-pink-200
+bg-white
+text-maroon-900
+shadow-xl
+shadow-pink-100
+transition-all
+duration-300
+hover:scale-110
+hover:border-pink-400
+hover:bg-gradient-to-br
+hover:from-rose-900
+hover:to-pink-600
+hover:text-white
+active:scale-95
+md:flex
+"
 
-      <button
-        type="button"
-        onClick={() => scroll('right')}
-        aria-label="Scroll categories right"
-        className="absolute right-0 top-[45%] z-30 hidden h-12 w-12 translate-x-1/2 place-items-center rounded-full border border-pink-200 bg-white text-maroon-900 shadow-xl shadow-pink-100 transition-all duration-300 hover:scale-110 hover:border-pink-400 hover:bg-gradient-to-br hover:from-rose-900 hover:to-pink-600 hover:text-white md:grid"
-      >
-        <ChevronRight size={22} />
-      </button>
+>
+
+<ChevronLeft
+ size={22}
+ strokeWidth={2.5}
+ className="shrink-0"
+/> </button>
+
+{/* RIGHT ARROW */}
+
+<button
+type="button"
+onClick={() => scroll('right')}
+aria-label="Scroll categories right"
+className="
+absolute
+right-0
+top-1/2
+z-30
+hidden
+h-12
+w-12
+translate-x-1/2
+-translate-y-1/2
+items-center
+justify-center
+rounded-full
+border
+border-pink-200
+bg-white
+text-maroon-900
+shadow-xl
+shadow-pink-100
+transition-all
+duration-300
+hover:scale-110
+hover:border-pink-400
+hover:bg-gradient-to-br
+hover:from-rose-900
+hover:to-pink-600
+hover:text-white
+active:scale-95
+md:flex
+"
+
+>
+
+<ChevronRight
+ size={22}
+ strokeWidth={2.5}
+ className="shrink-0"
+/> </button>
+
 
       {/* ================= CATEGORY LIST ================= */}
 
