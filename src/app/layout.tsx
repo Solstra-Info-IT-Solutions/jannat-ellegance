@@ -6,7 +6,7 @@ import './globals.css';
 
 import { CartProvider } from '@/context/CartContext';
 import AuthProvider from '@/context/AuthProvider';
-
+import AnnouncementBar from '@/components/AnnouncementBar';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
@@ -59,6 +59,8 @@ className={`${inter.variable} ${cormorant.variable}`}
           position="top-center"
           reverseOrder={false}
         />
+
+          <AnnouncementBar />
 
         {/* Header / Navbar */}
         <Suspense
