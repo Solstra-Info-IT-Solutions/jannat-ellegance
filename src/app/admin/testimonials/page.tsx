@@ -17,18 +17,18 @@ import {
 import AdminShell from '@/components/admin/AdminShell';
 
 type Testimonial = {
-  _id?: string;
   id: string;
 
   name: string;
 
   avatarUrl?: string;
-  image?: string;
 
   rating: number;
+
   message: string;
 
   isApproved: boolean;
+
   isActive: boolean;
 
   createdAt: string;
