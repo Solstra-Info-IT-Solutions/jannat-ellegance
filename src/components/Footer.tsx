@@ -131,7 +131,7 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <Link href="/refund-policy" className="text-pink-100/80 hover:text-pink-300 transition">
-                  Exchange & Return Policy
+                  Exchange Policy
                 </Link>
               </li>
               <li>
@@ -196,7 +196,7 @@ const Footer: React.FC = () => {
                 Terms of Service
               </Link>
               <Link href="/refund-policy" className="hover:text-pink-300 transition">
-                Refund Policy
+                Exchange Policy
               </Link>
             </div>
           </div>

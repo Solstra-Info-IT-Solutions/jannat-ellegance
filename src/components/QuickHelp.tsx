@@ -15,12 +15,13 @@ Headphones,
 } from 'lucide-react';
 
 const helpOptions = [
-{
-title: 'Track My Order',
-description: 'Check your latest order status',
-icon: Package,
-href: '/track-order',
-},
+// Track Order is temporarily hidden until its API flow is revisited.
+// {
+// title: 'Track My Order',
+// description: 'Check your latest order status',
+// icon: Package,
+// href: '/track-order',
+// },
 {
 title: 'Shop Collection',
 description: 'Explore our latest styles',
@@ -28,8 +29,8 @@ icon: ShoppingBag,
 href: '/products',
 },
 {
-title: 'Return & Refund',
-description: 'Return & Refund Information',
+title: 'Exchange Policy',
+description: 'Exchange Policy Information',
 icon: Truck,
 href: '/refund-policy',
 },

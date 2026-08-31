@@ -19,7 +19,7 @@ export default function RefundPage() {
 
         <article className="bg-white rounded-[32px] border border-maroon-100 p-8 sm:p-12 shadow-sm space-y-6 text-gray-700 leading-8">
           <h1 className="font-serif text-3xl sm:text-4xl text-maroon-950 font-normal border-b border-maroon-100 pb-4">
-            Refund &amp; Exchange Policy
+            Exchange Policy
           </h1>
           <p className="text-xs text-gray-400">Last updated: August 2026</p>
 

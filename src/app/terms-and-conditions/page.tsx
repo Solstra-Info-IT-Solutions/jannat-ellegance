@@ -24,7 +24,7 @@ export default function TermsPage() {
           <p className="text-xs text-gray-400">Last updated: August 2026</p>
 
           <p>
-            Welcome to Jannat Elegance. These terms and conditions outline the rules and regulations for the use of Jannat Elegance's Website, located at New Delhi, India.
+            Welcome to Jannat Elegance. These terms and conditions outline the rules and regulations for the use of Jannat Elegance's Website, located at Noida, India.
           </p>
 
           <h2 className="font-serif text-xl text-maroon-950 font-bold mt-8">1. License</h2>

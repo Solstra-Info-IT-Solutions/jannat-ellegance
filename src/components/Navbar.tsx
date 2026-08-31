@@ -395,6 +395,7 @@ return ( <header className="sticky top-0 z-50 w-full border-b border-pink-100/80
                       />
                     </Link>
 
+                    {/* Track Order is temporarily hidden until its API flow is revisited.
                     <Link
                       href="/track-order"
                       onClick={() => setAuthDropdownOpen(false)}
@@ -409,7 +410,7 @@ return ( <header className="sticky top-0 z-50 w-full border-b border-pink-100/80
                         size={15}
                         className="ml-auto text-pink-300"
                       />
-                    </Link>
+                    </Link> */}
 
                     <Link
                       href="/shop?wishlist=true"
@@ -634,6 +635,7 @@ return ( <header className="sticky top-0 z-50 w-full border-b border-pink-100/80
                 My Orders
               </Link>
 
+              {/* Track Order is temporarily hidden until its API flow is revisited.
               <Link
                 onClick={() => setMenuOpen(false)}
                 href="/track-order"
@@ -641,7 +643,7 @@ return ( <header className="sticky top-0 z-50 w-full border-b border-pink-100/80
               >
                 <ShoppingBag size={20} className="text-pink-600" />
                 Track My Order
-              </Link>
+              </Link> */}
 
               {user?.role === 'admin' && (
                 <Link
