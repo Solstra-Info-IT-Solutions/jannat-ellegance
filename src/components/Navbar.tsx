@@ -107,7 +107,7 @@ href: '/shop',
 },
 {
 label: 'About',
-href: '/#about',
+href: '/about',
 },
 {
 label: 'Contact',
