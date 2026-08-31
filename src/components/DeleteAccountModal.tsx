@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import {
   AlertTriangle,
   Loader2,
@@ -8,84 +8,68 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/AuthProvider';
 
 type DeleteAccountModalProps = {
-  isOpen: boolean;
+  open: boolean;
   onClose: () => void;
+  onDeleted: () => void;
 };
 
 export default function DeleteAccountModal({
-  isOpen,
+  open,
   onClose,
+  onDeleted,
 }: DeleteAccountModalProps) {
-  const router = useRouter();
-  const { logout } = useAuth();
-
   const [confirmation, setConfirmation] = useState('');
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
-  if (!isOpen) return null;
+  if (!open) return null;
 
   const handleClose = () => {
     if (loading) return;
 
     setConfirmation('');
-    setMessage('');
-
+    setError('');
     onClose();
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (event: FormEvent) => {
+    event.preventDefault();
+
+    setError('');
+
     if (confirmation !== 'DELETE') {
-      setMessage('Please type DELETE exactly to continue.');
+      setError('Please type DELETE exactly to continue.');
       return;
     }
 
+    setLoading(true);
+
     try {
-      setLoading(true);
-      setMessage('');
-
-      /*
-      =====================================
-      BACKEND API
-
-      Expected endpoint:
-
-      DELETE /api/auth/delete-account
-      */
-
-      const response = await fetch(
-        '/api/auth/delete-account',
-        {
-          method: 'DELETE',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const response = await fetch('/api/auth/delete-account', {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          confirmation: 'DELETE',
+        }),
+      });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data?.error || 'Unable to delete your account.'
-        );
+        throw new Error(data.error || 'Unable to delete your account.');
       }
 
-      await logout();
-
-      router.push('/');
-
-      router.refresh();
-    } catch (error) {
-      setMessage(
-        error instanceof Error
-          ? error.message
-          : 'Something went wrong. Please try again.'
+      onDeleted();
+    } catch (reason) {
+      setError(
+        reason instanceof Error
+          ? reason.message
+          : 'Unable to delete your account.'
       );
     } finally {
       setLoading(false);
@@ -93,252 +77,125 @@ export default function DeleteAccountModal({
   };
 
   return (
-    <>
+    <div
+      className="fixed inset-0 z-[110] flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="delete-account-title"
+    >
       {/* Overlay */}
-      <div
+      <button
+        type="button"
         onClick={handleClose}
-        className="
-          fixed
-          inset-0
-          z-[100]
-          bg-maroon-950/70
-          backdrop-blur-sm
-        "
+        className="absolute inset-0 cursor-default bg-maroon-950/70 backdrop-blur-sm"
+        aria-label="Close modal"
       />
 
-      {/* Modal */}
-      <div
-        className="
-          fixed
-          inset-0
-          z-[101]
-          flex
-          items-center
-          justify-center
-          px-4
-          py-6
-        "
-      >
-        <div
-          className="
-            relative
-            w-full
-            max-w-md
-            overflow-hidden
-            rounded-[30px]
-            border
-            border-red-200
-            bg-[#fff8fa]
-            shadow-2xl
-          "
-        >
-          {/* Top Danger Line */}
-          <div className="h-1.5 w-full bg-gradient-to-r from-red-700 via-rose-500 to-red-700" />
+      <div className="relative z-10 w-full max-w-md overflow-hidden rounded-[28px] border border-red-100 bg-[#fff8fa] shadow-2xl">
+        {/* Header */}
+        <div className="relative bg-gradient-to-r from-[#6d0f24] via-[#8d1730] to-[#b42345] px-6 py-7">
+          <button
+            type="button"
+            onClick={handleClose}
+            disabled={loading}
+            className="absolute right-5 top-5 grid h-9 w-9 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+          >
+            <X size={18} />
+          </button>
 
-          <div className="px-6 pb-7 pt-6">
-            {/* Header */}
-            <div className="flex items-start justify-between">
-              <div>
-                <div
-                  className="
-                    mb-4
-                    grid
-                    h-14
-                    w-14
-                    place-items-center
-                    rounded-2xl
-                    bg-red-50
-                    text-red-600
-                    shadow-sm
-                  "
-                >
-                  <Trash2 size={24} />
-                </div>
+          <div className="grid h-12 w-12 place-items-center rounded-2xl bg-white/10 text-red-100">
+            <ShieldAlert size={24} />
+          </div>
 
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-red-500">
-                  Dangerous Action
-                </p>
+          <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.25em] text-red-100/80">
+            Danger Zone
+          </p>
 
-                <h2 className="mt-2 font-serif text-3xl text-maroon-950">
-                  Delete Account
-                </h2>
-              </div>
+          <h2
+            id="delete-account-title"
+            className="mt-2 font-serif text-3xl text-white"
+          >
+            Delete Account
+          </h2>
 
-              <button
-                onClick={handleClose}
-                disabled={loading}
-                className="
-                  grid
-                  h-10
-                  w-10
-                  place-items-center
-                  rounded-full
-                  bg-pink-100/70
-                  text-maroon-800
-                  transition
-                  hover:bg-pink-200
-                "
-                aria-label="Close"
-              >
-                <X size={19} />
-              </button>
-            </div>
+          <p className="mt-2 text-sm leading-6 text-red-50/80">
+            This action is permanent and cannot be undone.
+          </p>
+        </div>
 
-            {/* Warning Box */}
-            <div
-              className="
-                mt-6
-                rounded-2xl
-                border
-                border-red-200
-                bg-red-50
-                p-4
-              "
-            >
-              <div className="flex gap-3">
-                <AlertTriangle
-                  size={20}
-                  className="shrink-0 text-red-600"
-                />
+        <form onSubmit={handleDelete} className="p-6 sm:p-7">
+          <div className="flex gap-3 rounded-2xl border border-red-100 bg-red-50 px-4 py-4">
+            <AlertTriangle
+              size={20}
+              className="mt-0.5 shrink-0 text-red-500"
+            />
 
-                <div>
-                  <p className="text-sm font-bold text-red-800">
-                    This action cannot be undone.
-                  </p>
+            <div>
+              <p className="text-sm font-bold text-red-800">
+                Before you continue
+              </p>
 
-                  <p className="mt-1 text-xs leading-5 text-red-700/80">
-                    Your account and associated personal account data
-                    will be permanently removed.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Information */}
-            <div className="mt-5 flex gap-3 rounded-2xl border border-maroon-100 bg-pink-50/60 p-4">
-              <ShieldAlert
-                size={19}
-                className="shrink-0 text-maroon-700"
-              />
-
-              <p className="text-xs leading-5 text-maroon-900/70">
-                Before deleting your account, please make sure you have
-                reviewed your order history and saved any information you
-                may need.
+              <p className="mt-1 text-xs leading-5 text-red-700/80">
+                Your account and associated profile information may be
+                permanently removed according to your backend configuration.
               </p>
             </div>
-
-            {/* Confirmation */}
-            <div className="mt-6">
-              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.13em] text-maroon-900">
-                Type{' '}
-                <span className="rounded bg-red-100 px-1.5 py-0.5 text-red-600">
-                  DELETE
-                </span>{' '}
-                to confirm
-              </label>
-
-              <input
-                type="text"
-                value={confirmation}
-                onChange={(event) =>
-                  setConfirmation(event.target.value)
-                }
-                placeholder="Type DELETE here"
-                disabled={loading}
-                className="
-                  w-full
-                  rounded-2xl
-                  border
-                  border-maroon-100
-                  bg-[#fff8fa]
-                  px-4
-                  py-3.5
-                  text-sm
-                  text-maroon-950
-                  outline-none
-                  transition
-                  placeholder:text-maroon-400
-                  focus:border-red-400
-                  focus:ring-4
-                  focus:ring-red-100
-                "
-              />
-            </div>
-
-            {/* Error */}
-            {message && (
-              <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700">
-                {message}
-              </div>
-            )}
-
-            {/* Actions */}
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              <button
-                onClick={handleClose}
-                disabled={loading}
-                className="
-                  rounded-full
-                  border
-                  border-maroon-200
-                  bg-transparent
-                  px-4
-                  py-3.5
-                  text-xs
-                  font-bold
-                  uppercase
-                  tracking-wider
-                  text-maroon-900
-                  transition
-                  hover:bg-pink-50
-                "
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={handleDelete}
-                disabled={loading || confirmation !== 'DELETE'}
-                className="
-                  flex
-                  items-center
-                  justify-center
-                  gap-2
-                  rounded-full
-                  bg-gradient-to-r
-                  from-red-700
-                  to-rose-600
-                  px-4
-                  py-3.5
-                  text-xs
-                  font-bold
-                  uppercase
-                  tracking-wider
-                  text-white
-                  shadow-lg
-                  transition
-                  hover:-translate-y-0.5
-                  disabled:cursor-not-allowed
-                  disabled:opacity-40
-                "
-              >
-                {loading ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" />
-                    Deleting...
-                  </>
-                ) : (
-                  <>
-                    <Trash2 size={16} />
-                    Delete
-                  </>
-                )}
-              </button>
-            </div>
           </div>
-        </div>
+
+          {error && (
+            <div className="mt-5 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
+          <label className="mt-6 block">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-maroon-900">
+              Type{' '}
+              <strong className="rounded bg-red-100 px-1.5 py-0.5 text-red-600">
+                DELETE
+              </strong>{' '}
+              to confirm
+            </span>
+
+            <input
+              value={confirmation}
+              onChange={(event) => setConfirmation(event.target.value)}
+              placeholder="Type DELETE here"
+              autoComplete="off"
+              className="mt-2 w-full rounded-2xl border border-red-200 bg-white px-4 py-3.5 text-sm font-semibold text-maroon-950 outline-none transition placeholder:font-normal placeholder:text-gray-400 focus:border-red-400 focus:ring-4 focus:ring-red-100"
+            />
+          </label>
+
+          <div className="mt-7 flex gap-3">
+            <button
+              type="button"
+              onClick={handleClose}
+              disabled={loading}
+              className="flex-1 rounded-full border border-maroon-200 px-5 py-3.5 text-xs font-bold uppercase tracking-wider text-maroon-800 transition hover:bg-maroon-50 disabled:opacity-50"
+            >
+              Keep Account
+            </button>
+
+            <button
+              type="submit"
+              disabled={loading || confirmation !== 'DELETE'}
+              className="flex flex-1 items-center justify-center gap-2 rounded-full bg-red-600 px-5 py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-red-200 transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={15} className="animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 size={15} />
+                  Delete Account
+                </>
+              )}
+            </button>
+          </div>
+        </form>
       </div>
-    </>
+    </div>
   );
 }
