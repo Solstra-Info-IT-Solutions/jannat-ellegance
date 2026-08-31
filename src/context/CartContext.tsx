@@ -122,7 +122,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const cartCount = store.cart.length;
   const subtotal = useMemo(() => store.cart.reduce((sum, item) => sum + item.price * item.quantity, 0), [store.cart]);
-  const shipping = subtotal === 0 || subtotal >= 2999 ? 0 : 99;
+  const shipping = 0;
   const toggleWishlist = (product: Product) => {
     const saved = store.isWishlisted(product.id);
     store.toggleWishlist(product);

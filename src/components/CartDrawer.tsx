@@ -16,8 +16,6 @@ import {
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 
-const FREE_SHIPPING_THRESHOLD = 2999;
-
 const CartDrawer: React.FC = () => {
   const {
     cart,
@@ -33,15 +31,9 @@ const CartDrawer: React.FC = () => {
 
   if (!cartDrawerOpen) return null;
 
-  const remainingForFreeShipping = Math.max(
-    FREE_SHIPPING_THRESHOLD - subtotal,
-    0
-  );
+  const remainingForFreeShipping = 0;
 
-  const shippingProgress = Math.min(
-    (subtotal / FREE_SHIPPING_THRESHOLD) * 100,
-    100
-  );
+  const shippingProgress = 100;
 
   const itemCount = cart.reduce(
     (totalItems, item) => totalItems + item.quantity,
