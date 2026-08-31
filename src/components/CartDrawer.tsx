@@ -390,17 +390,17 @@ const CartDrawer: React.FC = () => {
 
               <div className="mt-6 rounded-2xl border border-pink-200 bg-gradient-to-r from-pink-50 to-rose-50 p-4">
 
-                <div className="flex items-start gap-3">
+                <div className="flex items-center justify-center gap-3 text-center">
 
-                  <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-maroon-900 text-pink-200">
+                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-maroon-900 text-pink-200">
                     <Truck size={16} />
                   </div>
 
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0">
 
                     {remainingForFreeShipping > 0 ? (
                       <>
-                        <p className="text-xs leading-5 text-maroon-900">
+                        <p className="text-center text-xs leading-5 text-maroon-900">
                           Add{' '}
                           <strong>
                             ₹
@@ -429,7 +429,7 @@ const CartDrawer: React.FC = () => {
                       </>
                     ) : (
 
-                      <p className="text-xs font-semibold text-green-700">
+                      <p className="text-center text-xs font-semibold leading-5 text-green-700">
                         🎉 Congratulations! You've unlocked FREE SHIPPING.
                       </p>
 
