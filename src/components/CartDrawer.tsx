@@ -10,8 +10,13 @@ import {
   ShoppingBag,
   Trash2,
   X,
+  Sparkles,
+  ShieldCheck,
+  Truck,
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+
+const FREE_SHIPPING_THRESHOLD = 2999;
 
 const CartDrawer: React.FC = () => {
   const {
@@ -28,184 +33,533 @@ const CartDrawer: React.FC = () => {
 
   if (!cartDrawerOpen) return null;
 
+  const remainingForFreeShipping = Math.max(
+    FREE_SHIPPING_THRESHOLD - subtotal,
+    0
+  );
+
+  const shippingProgress = Math.min(
+    (subtotal / FREE_SHIPPING_THRESHOLD) * 100,
+    100
+  );
+
+  const itemCount = cart.reduce(
+    (totalItems, item) => totalItems + item.quantity,
+    0
+  );
+
   return (
     <>
-      {/* Overlay Background */}
+      {/* ================= OVERLAY ================= */}
+
       <div
         onClick={() => setCartDrawerOpen(false)}
-        className="fixed inset-0 z-50 bg-maroon-950/40 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
+        className="
+          fixed inset-0
+          z-[9998]
+          bg-maroon-950/55
+          backdrop-blur-sm
+          animate-in fade-in duration-300
+        "
       />
 
-      {/* Drawer Container */}
+      {/* ================= CART DRAWER ================= */}
+
       <aside
-        className="fixed top-0 right-0 z-50 h-full w-full sm:w-[430px] bg-[#fff8fa] shadow-2xl animate-in slide-in-from-right duration-300 flex flex-col font-sans"
+        className="
+          fixed right-0 top-0
+          z-[9999]
+          flex h-[100dvh]
+          w-full max-w-[440px]
+          flex-col
+          overflow-hidden
+          border-l border-pink-200/70
+          bg-[#fff8fa]
+          shadow-[-20px_0_60px_rgba(65,8,28,0.25)]
+          animate-in slide-in-from-right duration-300
+        "
       >
-        {/* Drawer Header */}
-        <div className="flex items-center justify-between px-5 sm:px-6 py-5 bg-white border-b border-maroon-100">
-          <div>
-            <h2 className="font-serif text-2xl font-semibold text-maroon-900">
-              Your Bag
-            </h2>
-            <p className="text-xs text-gray-500 mt-1">
-              {cart.length} item{cart.length !== 1 ? 's' : ''}
-            </p>
+        {/* ================= HEADER ================= */}
+
+        <div className="relative shrink-0 overflow-hidden border-b border-pink-200/60 bg-gradient-to-r from-maroon-950 via-rose-950 to-maroon-900 px-5 py-5 text-white sm:px-6">
+
+          {/* Background Decorations */}
+
+          <div className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-pink-500/20 blur-2xl" />
+
+          <div className="pointer-events-none absolute -bottom-16 left-10 h-28 w-28 rounded-full bg-rose-400/10 blur-2xl" />
+
+          <div className="relative flex items-center justify-between">
+
+            <div className="flex items-center gap-3">
+
+              <div className="grid h-11 w-11 place-items-center rounded-2xl border border-white/15 bg-white/10 backdrop-blur">
+                <ShoppingBag size={20} className="text-pink-200" />
+              </div>
+
+              <div>
+                <div className="flex items-center gap-2">
+
+                  <h2 className="font-serif text-2xl font-semibold">
+                    Your Bag
+                  </h2>
+
+                  <Sparkles
+                    size={15}
+                    className="text-pink-300"
+                  />
+
+                </div>
+
+                <p className="mt-0.5 text-xs text-pink-100/70">
+                  {itemCount} item{itemCount !== 1 ? 's' : ''} in your bag
+                </p>
+
+              </div>
+
+            </div>
+
+            <button
+              onClick={() => setCartDrawerOpen(false)}
+              aria-label="Close cart"
+              className="
+                grid h-10 w-10 place-items-center
+                rounded-full
+                border border-white/15
+                bg-white/10
+                text-white
+                backdrop-blur
+                transition-all duration-300
+                hover:rotate-90
+                hover:bg-white/20
+              "
+            >
+              <X size={20} />
+            </button>
+
           </div>
-          <button
-            onClick={() => setCartDrawerOpen(false)}
-            className="w-10 h-10 rounded-full bg-maroon-50 flex items-center justify-center text-maroon-800 hover:bg-maroon-100 transition"
-          >
-            <X size={20} />
-          </button>
+
         </div>
 
-        {/* Drawer Scrollable Content */}
-        <div className="flex-grow overflow-y-auto px-5 sm:px-6 py-5">
+        {/* ================= CONTENT ================= */}
+
+        <div className="flex-1 overflow-y-auto px-4 py-5 sm:px-5">
+
+          {/* ================= EMPTY CART ================= */}
+
           {cart.length === 0 ? (
-            <div className="h-full flex items-center justify-center text-center">
-              <div>
-                <div className="w-20 h-20 rounded-full bg-maroon-50 flex items-center justify-center mx-auto mb-4">
-                  <ShoppingBag size={32} className="text-maroon-700" />
+
+            <div className="flex min-h-full items-center justify-center py-16 text-center">
+
+              <div className="max-w-xs">
+
+                <div className="relative mx-auto mb-6 grid h-24 w-24 place-items-center rounded-full bg-gradient-to-br from-pink-100 to-rose-100">
+
+                  <div className="absolute inset-2 rounded-full border border-pink-200" />
+
+                  <ShoppingBag
+                    size={34}
+                    className="relative text-maroon-800"
+                  />
+
                 </div>
-                <h3 className="font-serif text-2xl text-maroon-900">
+
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-pink-600">
+                  Your Collection Awaits
+                </p>
+
+                <h3 className="mt-3 font-serif text-3xl text-maroon-950">
                   Your bag is empty
                 </h3>
-                <p className="text-sm text-gray-500 mt-2 max-w-[250px] mx-auto">
-                  Looks like you haven't added anything to your bag yet.
+
+                <p className="mt-3 text-sm leading-6 text-maroon-900/55">
+                  Discover elegant styles and find something beautiful for your next special moment.
                 </p>
+
                 <Link
                   href="/shop"
                   onClick={() => setCartDrawerOpen(false)}
-                  className="inline-flex items-center gap-2 bg-maroon-800 hover:bg-maroon-900 text-white px-6 py-3 rounded-full mt-6 text-sm font-semibold transition"
+                  className="
+                    mt-7 inline-flex items-center gap-2
+                    rounded-full
+                    bg-gradient-to-r from-rose-900 to-pink-600
+                    px-6 py-3.5
+                    text-sm font-semibold text-white
+                    shadow-lg shadow-pink-200
+                    transition-all duration-300
+                    hover:-translate-y-1
+                    hover:shadow-xl
+                  "
                 >
-                  Start Shopping
-                  <ArrowRight size={16} />
+                  Explore Collection
+                  <ArrowRight size={17} />
                 </Link>
+
               </div>
+
             </div>
+
           ) : (
-            <div className="space-y-4">
-              {cart.map((item) => (
-                <div
-                  key={`${item.id}-${item.size}`}
-                  className="bg-white rounded-2xl p-3 shadow-sm border border-maroon-50"
-                >
-                  <div className="flex gap-3">
-                    {/* Product Image */}
-                    <Link
-                      href={`/product/${item.id}`}
-                      onClick={() => setCartDrawerOpen(false)}
-                      className="w-20 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-maroon-50 relative border border-maroon-100"
-                    >
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        fill
-                        className="object-cover object-top"
-                      />
-                    </Link>
 
-                    {/* Product Details */}
-                    <div className="flex-1 min-w-0 flex flex-col justify-between">
-                      <div>
-                        <div className="flex justify-between items-start gap-2">
-                          <Link
-                            href={`/product/${item.id}`}
-                            onClick={() => setCartDrawerOpen(false)}
-                            className="font-serif text-sm font-semibold text-maroon-950 hover:text-maroon-700 line-clamp-1 transition"
-                          >
-                            {item.name}
-                          </Link>
-                          <button
-                            onClick={() => removeFromCart(item.id, item.size)}
-                            className="text-gray-400 hover:text-red-500 transition"
-                            aria-label="Remove item"
-                          >
-                            <Trash2 size={16} />
-                          </button>
+            <>
+              {/* ================= CART ITEMS ================= */}
+
+              <div className="space-y-4">
+
+                {cart.map((item) => (
+
+                  <article
+                    key={`${item.id}-${item.size}`}
+                    className="
+                      group relative
+                      overflow-hidden
+                      rounded-2xl
+                      border border-pink-200/60
+                      bg-gradient-to-br from-[#fffafd] to-pink-50/70
+                      p-3
+                      shadow-sm
+                      transition-all duration-300
+                      hover:border-pink-300
+                      hover:shadow-md
+                    "
+                  >
+
+                    <div className="flex gap-3">
+
+                      {/* Product Image */}
+
+                      <Link
+                        href={`/product/${item.id}`}
+                        onClick={() => setCartDrawerOpen(false)}
+                        className="
+                          relative h-24 w-20
+                          shrink-0 overflow-hidden
+                          rounded-xl
+                          border border-pink-200/70
+                          bg-pink-50
+                        "
+                      >
+
+                        <Image
+                          src={item.image || '/images/logo.jpeg'}
+                          alt={item.name}
+                          fill
+                          sizes="80px"
+                          className="
+                            object-cover object-top
+                            transition-transform duration-500
+                            group-hover:scale-105
+                          "
+                        />
+
+                      </Link>
+
+                      {/* Product Details */}
+
+                      <div className="flex min-w-0 flex-1 flex-col justify-between">
+
+                        <div>
+
+                          <div className="flex items-start justify-between gap-3">
+
+                            <Link
+                              href={`/product/${item.id}`}
+                              onClick={() => setCartDrawerOpen(false)}
+                              className="
+                                line-clamp-1
+                                font-serif text-base font-semibold
+                                text-maroon-950
+                                transition-colors
+                                hover:text-pink-600
+                              "
+                            >
+                              {item.name}
+                            </Link>
+
+                            <button
+                              onClick={() =>
+                                removeFromCart(item.id, item.size)
+                              }
+                              aria-label={`Remove ${item.name}`}
+                              className="
+                                grid h-8 w-8 shrink-0 place-items-center
+                                rounded-full
+                                text-maroon-400
+                                transition-all
+                                hover:bg-red-50
+                                hover:text-red-500
+                              "
+                            >
+                              <Trash2 size={16} />
+                            </button>
+
+                          </div>
+
+                          <div className="mt-1.5 inline-flex items-center rounded-full border border-pink-200 bg-pink-50 px-2.5 py-1">
+
+                            <span className="text-[10px] text-maroon-700">
+                              Size:
+                            </span>
+
+                            <span className="ml-1 text-[10px] font-bold text-maroon-950">
+                              {item.size}
+                            </span>
+
+                          </div>
+
                         </div>
-                        <p className="text-[11px] text-gray-500 mt-0.5">
-                          Size: <span className="font-semibold text-maroon-900">{item.size}</span>
-                        </p>
+
+                        {/* Bottom Controls */}
+
+                        <div className="mt-3 flex items-center justify-between gap-3">
+
+                          {/* Quantity */}
+
+                          <div
+                            className="
+                              flex items-center
+                              rounded-full
+                              border border-pink-200
+                              bg-[#fff8fa]
+                              p-1
+                            "
+                          >
+
+                            <button
+                              onClick={() =>
+                                decreaseQuantity(item.id, item.size)
+                              }
+                              className="
+                                grid h-7 w-7 place-items-center
+                                rounded-full
+                                text-maroon-700
+                                transition
+                                hover:bg-pink-100
+                              "
+                              aria-label="Decrease quantity"
+                            >
+                              <Minus size={13} />
+                            </button>
+
+                            <span className="w-7 text-center text-xs font-bold text-maroon-950">
+                              {item.quantity}
+                            </span>
+
+                            <button
+                              onClick={() =>
+                                increaseQuantity(item.id, item.size)
+                              }
+                              className="
+                                grid h-7 w-7 place-items-center
+                                rounded-full
+                                bg-maroon-900
+                                text-white
+                                shadow-sm
+                                transition
+                                hover:bg-pink-600
+                              "
+                              aria-label="Increase quantity"
+                            >
+                              <Plus size={13} />
+                            </button>
+
+                          </div>
+
+                          {/* Price */}
+
+                          <div className="text-right">
+
+                            <p className="text-[10px] text-maroon-900/45">
+                              Total
+                            </p>
+
+                            <p className="text-sm font-bold text-maroon-900">
+                              ₹
+                              {(item.price * item.quantity).toLocaleString(
+                                'en-IN'
+                              )}
+                            </p>
+
+                          </div>
+
+                        </div>
+
                       </div>
 
-                      <div className="flex items-center justify-between mt-3">
-                        {/* Quantity Counter */}
-                        <div className="flex items-center border border-maroon-100 rounded-full bg-maroon-50/50">
-                          <button
-                            onClick={() => decreaseQuantity(item.id, item.size)}
-                            className="p-1.5 hover:text-maroon-700 transition"
-                          >
-                            <Minus size={12} />
-                          </button>
-                          <span className="w-6 text-center text-xs font-semibold text-maroon-950">
-                            {item.quantity}
-                          </span>
-                          <button
-                            onClick={() => increaseQuantity(item.id, item.size)}
-                            className="p-1.5 hover:text-maroon-700 transition"
-                          >
-                            <Plus size={12} />
-                          </button>
-                        </div>
-
-                        {/* Total Price */}
-                        <span className="font-bold text-sm text-maroon-800">
-                          ₹{(item.price * item.quantity).toLocaleString()}
-                        </span>
-                      </div>
                     </div>
+
+                  </article>
+
+                ))}
+
+              </div>
+
+              {/* ================= FREE SHIPPING ================= */}
+
+              <div className="mt-6 rounded-2xl border border-pink-200 bg-gradient-to-r from-pink-50 to-rose-50 p-4">
+
+                <div className="flex items-start gap-3">
+
+                  <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-maroon-900 text-pink-200">
+                    <Truck size={16} />
                   </div>
+
+                  <div className="min-w-0 flex-1">
+
+                    {remainingForFreeShipping > 0 ? (
+                      <>
+                        <p className="text-xs leading-5 text-maroon-900">
+                          Add{' '}
+                          <strong>
+                            ₹
+                            {remainingForFreeShipping.toLocaleString(
+                              'en-IN'
+                            )}
+                          </strong>{' '}
+                          more to unlock{' '}
+                          <strong className="text-pink-600">
+                            FREE SHIPPING
+                          </strong>{' '}
+                          🎁
+                        </p>
+
+                        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-pink-200">
+
+                          <div
+                            className="h-full rounded-full bg-gradient-to-r from-rose-900 to-pink-500 transition-all duration-500"
+                            style={{
+                              width: `${shippingProgress}%`,
+                            }}
+                          />
+
+                        </div>
+
+                      </>
+                    ) : (
+
+                      <p className="text-xs font-semibold text-green-700">
+                        🎉 Congratulations! You've unlocked FREE SHIPPING.
+                      </p>
+
+                    )}
+
+                  </div>
+
                 </div>
-              ))}
-            </div>
+
+              </div>
+
+            </>
+
           )}
+
         </div>
 
-        {/* Drawer Footer / Summary */}
-        {cart.length > 0 && (
-          <div className="bg-white border-t border-maroon-100 px-5 sm:px-6 py-5">
-            {/* Free Shipping Alert */}
-            {subtotal < 2999 && (
-              <div className="bg-[#fff0f3] rounded-xl px-4 py-2.5 mb-4 border border-maroon-100">
-                <p className="text-xs text-maroon-900">
-                  Add <strong>₹{(2999 - subtotal).toLocaleString()}</strong> more to unlock <strong>FREE SHIPPING</strong> 🎁
-                </p>
-              </div>
-            )}
+        {/* ================= FOOTER ================= */}
 
-            {/* Calculations Panel */}
-            <div className="space-y-2 text-sm font-sans">
-              <div className="flex justify-between text-gray-600">
+        {cart.length > 0 && (
+
+          <div className="
+            shrink-0
+            border-t border-pink-200/70
+            bg-gradient-to-b from-[#fffafd] to-[#fff3f6]
+            px-5 py-5 sm:px-6
+          ">
+
+            {/* Price Summary */}
+
+            <div className="space-y-3">
+
+              <div className="flex items-center justify-between text-sm text-maroon-900/65">
+
                 <span>Subtotal</span>
-                <span>₹{subtotal.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-gray-600">
-                <span>Shipping</span>
-                <span className={shipping === 0 ? 'text-green-600 font-semibold' : ''}>
-                  {shipping === 0 ? 'FREE' : `₹${shipping}`}
+
+                <span className="font-medium">
+                  ₹{subtotal.toLocaleString('en-IN')}
                 </span>
+
               </div>
-              <div className="h-px bg-maroon-100 my-2" />
-              <div className="flex justify-between text-base font-bold text-maroon-950">
-                <span>Total</span>
-                <span>₹{total.toLocaleString()}</span>
+
+              <div className="flex items-center justify-between text-sm text-maroon-900/65">
+
+                <span>Shipping</span>
+
+                <span
+                  className={
+                    shipping === 0
+                      ? 'font-semibold text-green-600'
+                      : 'font-medium'
+                  }
+                >
+                  {shipping === 0
+                    ? 'FREE'
+                    : `₹${shipping.toLocaleString('en-IN')}`}
+                </span>
+
               </div>
+
+              <div className="border-t border-pink-200/70 pt-3">
+
+                <div className="flex items-center justify-between">
+
+                  <span className="font-serif text-xl font-semibold text-maroon-950">
+                    Total
+                  </span>
+
+                  <span className="font-serif text-xl font-bold text-maroon-950">
+                    ₹{total.toLocaleString('en-IN')}
+                  </span>
+
+                </div>
+
+              </div>
+
             </div>
 
-            {/* Link Actions */}
+            {/* Checkout Button */}
+
             <Link
               href="/cart"
               onClick={() => setCartDrawerOpen(false)}
-              className="mt-5 w-full bg-maroon-800 hover:bg-maroon-900 text-white py-3.5 rounded-full flex items-center justify-center gap-2 font-semibold transition shadow-lg shadow-maroon-800/20"
+              className="
+                group mt-5
+                flex w-full items-center justify-center gap-3
+                rounded-full
+                bg-gradient-to-r from-maroon-950 via-rose-900 to-pink-600
+                px-5 py-4
+                text-sm font-bold text-white
+                shadow-lg shadow-maroon-900/20
+                transition-all duration-300
+                hover:-translate-y-0.5
+                hover:shadow-xl
+              "
             >
+
               View Cart & Checkout
-              <ArrowRight size={18} />
+
+              <ArrowRight
+                size={18}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
+
             </Link>
-            <p className="text-center text-[10px] text-gray-400 mt-3">
-              Secure checkout · Exchange only within 7 days · Premium details
-            </p>
+
+            {/* Security Text */}
+
+            <div className="mt-4 flex items-center justify-center gap-2 text-center">
+
+              <ShieldCheck size={14} className="text-pink-500" />
+
+              <p className="text-[10px] text-maroon-900/45">
+                Secure checkout · Premium shopping experience
+              </p>
+
+            </div>
+
           </div>
+
         )}
+
       </aside>
     </>
   );
