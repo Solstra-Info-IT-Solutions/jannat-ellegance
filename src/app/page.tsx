@@ -10,6 +10,7 @@ import AboutSection from '@/components/AboutSection';
 import ProductCard from '@/components/ProductCard';
 import Testimonials from '@/components/Testimonials';
 import ExploreColors from '@/components/ExploreColors';
+import VideoSection from '@/components/VideoSection';
 
 import { Sparkles } from 'lucide-react';
 import { Product } from '@/types';
@@ -185,6 +186,9 @@ function HomeContent() {
         </div>
 
       </section>
+
+      {/* Brand Fashion Video */}
+      <VideoSection />
 
       {/* Explore Colors */}
 
