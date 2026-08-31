@@ -139,7 +139,7 @@ return (
           </p>
 
           <Link
-            href="/contact"
+            href="/contact-us"
             onClick={() => setIsOpen(false)}
             className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-pink-600 transition hover:text-maroon-900"
           >
