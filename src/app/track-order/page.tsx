@@ -331,7 +331,7 @@ return ( <main className="min-h-screen bg-[#fff8fa] py-8 sm:py-12"> <div classNa
               </p>
 
               <h2 className="mt-2 font-serif text-3xl text-maroon-950">
-                Order {formatOrderId(order.id.slice(-8))}
+                 Order {order.id}
               </h2>
 
               <p className="mt-2 text-sm text-gray-500">
