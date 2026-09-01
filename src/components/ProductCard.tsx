@@ -9,13 +9,24 @@ Eye,
 Sparkles,
 ArrowUpRight,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthProvider';
 import { Product } from '@/types';
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({
+product,
+}: {
+product: Product;
+}) {
+const router = useRouter();
+
 const { addToCart, toggleWishlist, isWishlisted } = useCart();
+const { user } = useAuth();
 
 const image = product.imageUrls[0] || '/images/logo.jpeg';
+
+/* ================= STOCK ================= */
 
 const totalStock = product.sizes.reduce(
 (total, item) => total + item.stock,
@@ -27,6 +38,8 @@ const soldOut = totalStock === 0;
 const firstAvailableSize = product.sizes.find(
 (item) => item.stock > 0
 )?.size;
+
+/* ================= PRICE ================= */
 
 const prices = product.sizes.map((item) => {
 const basePrice = item.price ?? product.price;
@@ -50,7 +63,23 @@ const lowestPrice = prices.length
 
 const hasPriceRange = new Set(prices).size > 1;
 
+/* ================= WISHLIST ================= */
+
 const wishlisted = isWishlisted(product.id);
+
+const handleWishlist = () => {
+// User login nahi hai → Login page par bhejo
+if (!user) {
+router.push('/login');
+return;
+}
+
+// Logged in user → Wishlist toggle
+toggleWishlist(product);
+
+};
+
+/* ================= DISCOUNT ================= */
 
 const discountLabel =
 product.isOnSale && product.discount
@@ -90,17 +119,13 @@ return ( <article className="group relative flex h-full flex-col overflow-hidden
 
       {product.isOnSale && (
         <span className="rounded-full bg-gradient-to-r from-rose-900 to-pink-600 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg">
-
           SALE
-
         </span>
       )}
 
       {discountLabel && (
         <span className="rounded-full border border-pink-200 bg-white/95 px-3 py-1 text-[9px] font-bold uppercase tracking-wider text-pink-600 shadow-sm backdrop-blur">
-
           {discountLabel}
-
         </span>
       )}
 
@@ -109,7 +134,7 @@ return ( <article className="group relative flex h-full flex-col overflow-hidden
     {/* ================= WISHLIST ================= */}
 
     <button
-      onClick={() => toggleWishlist(product)}
+      onClick={handleWishlist}
       aria-label={
         wishlisted
           ? 'Remove from wishlist'
@@ -144,36 +169,13 @@ return ( <article className="group relative flex h-full flex-col overflow-hidden
       <div className="absolute inset-0 z-30 grid place-items-center bg-maroon-950/60 backdrop-blur-[2px]">
 
         <div className="rounded-full border border-white/30 bg-maroon-950/90 px-5 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-xl">
-
           Sold Out
-
         </div>
 
       </div>
     )}
 
-    {/* ================= QUICK ADD ================= */}
-
-    {!soldOut && firstAvailableSize && (
-      <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
-
-        <button
-          onClick={() =>
-            addToCart(product, firstAvailableSize)
-          }
-          className="flex w-full translate-y-20 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-maroon-950 via-rose-900 to-pink-700 px-4 py-3.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white opacity-0 shadow-xl transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl active:scale-[0.98] group-hover:translate-y-0 group-hover:opacity-100"
-        >
-
-          <ShoppingBag size={16} />
-
-          Quick Add To Bag
-
-        </button>
-
-      </div>
-    )}
-
-    {/* Mobile Bottom Indicator */}
+    {/* Bottom Luxury Indicator */}
 
     {!soldOut && (
       <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-400 to-transparent opacity-60" />
@@ -211,9 +213,7 @@ return ( <article className="group relative flex h-full flex-col overflow-hidden
       className="mt-2"
     >
       <h3 className="line-clamp-2 min-h-[3rem] font-serif text-lg font-semibold leading-snug text-maroon-950 transition-colors duration-300 group-hover:text-rose-700 sm:text-xl">
-
         {product.name}
-
       </h3>
     </Link>
 
@@ -221,25 +221,21 @@ return ( <article className="group relative flex h-full flex-col overflow-hidden
 
     <div className="my-4 h-px w-full bg-gradient-to-r from-pink-200 via-maroon-100 to-transparent" />
 
-    {/* Price */}
+    {/* ================= PRICE ================= */}
 
     <div className="mt-auto flex flex-wrap items-end justify-between gap-3">
 
       <div>
 
         <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-maroon-400">
-
           {hasPriceRange ? 'Starting From' : 'Price'}
-
         </p>
 
         <div className="mt-1 flex flex-wrap items-center gap-2">
 
           <span className="font-serif text-xl font-bold text-maroon-950 sm:text-2xl">
-
             {hasPriceRange ? 'From ' : ''}₹
             {lowestPrice.toLocaleString('en-IN')}
-
           </span>
 
         </div>
@@ -252,15 +248,11 @@ return ( <article className="group relative flex h-full flex-col overflow-hidden
         <div className="text-right">
 
           <p className="text-[9px] font-bold uppercase tracking-wider text-maroon-400">
-
             MRP
-
           </p>
 
           <p className="mt-1 text-xs font-medium text-maroon-400 line-through">
-
             ₹{product.price.toLocaleString('en-IN')}
-
           </p>
 
         </div>
@@ -268,20 +260,29 @@ return ( <article className="group relative flex h-full flex-col overflow-hidden
 
     </div>
 
-    {/* Bottom Action - Mobile Friendly */}
+    {/* ================= SINGLE ADD TO BAG ================= */}
 
     {!soldOut && firstAvailableSize && (
       <button
         onClick={() =>
           addToCart(product, firstAvailableSize)
         }
-        className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-pink-200 bg-pink-50 py-3 text-[10px] font-bold uppercase tracking-[0.14em] text-maroon-900 transition-all duration-300 hover:border-pink-400 hover:bg-gradient-to-r hover:from-rose-900 hover:to-pink-600 hover:text-white sm:hidden"
+        className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-maroon-950 via-rose-900 to-pink-700 py-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.98]"
       >
-
         <ShoppingBag size={15} />
 
         Add To Bag
+      </button>
+    )}
 
+    {/* ================= SOLD OUT BUTTON ================= */}
+
+    {soldOut && (
+      <button
+        disabled
+        className="mt-5 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-maroon-100 py-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-maroon-400"
+      >
+        Sold Out
       </button>
     )}
 
