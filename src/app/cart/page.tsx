@@ -1,11 +1,19 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { Trash2, Minus, Plus, ShoppingBag, ArrowRight, ShieldCheck, ChevronRight } from 'lucide-react';
-import { useCart } from '@/context/CartContext';
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import {
+  Trash2,
+  Minus,
+  Plus,
+  ShoppingBag,
+  ArrowRight,
+  ShieldCheck,
+  ChevronRight,
+} from "lucide-react";
+import { useCart } from "@/context/CartContext";
 
 export default function CartPage() {
   const router = useRouter();
@@ -27,9 +35,12 @@ export default function CartPage() {
           <div className="w-20 h-20 rounded-full bg-maroon-50 flex items-center justify-center mx-auto mb-6">
             <ShoppingBag size={32} className="text-maroon-800" />
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl text-maroon-950 font-normal">Your Bag is Empty</h1>
+          <h1 className="font-serif text-3xl sm:text-4xl text-maroon-950 font-normal">
+            Your Bag is Empty
+          </h1>
           <p className="text-gray-500 mt-2 text-sm max-w-xs mx-auto">
-            Discover something beautiful for your upcoming celebration and experience true elegance.
+            Discover something beautiful for your upcoming celebration and
+            experience true elegance.
           </p>
           <Link
             href="/shop"
@@ -46,7 +57,6 @@ export default function CartPage() {
   return (
     <main className="bg-[#fff8fa] min-h-screen py-10 sm:py-16 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* Navigation Step Breadcrumb */}
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-400 mb-8 select-none">
           <span className="text-maroon-800 font-extrabold">Shopping Bag</span>
@@ -57,11 +67,12 @@ export default function CartPage() {
         </div>
 
         <div className="grid lg:grid-cols-[1fr_380px] gap-8 items-start animate-fadeUp">
-          
           {/* Bag Items list */}
           <div className="space-y-4">
-            <h1 className="font-serif text-3xl sm:text-4.5xl text-maroon-950 font-normal mb-6">Shopping Bag</h1>
-            
+            <h1 className="font-serif text-3xl sm:text-4.5xl text-maroon-950 font-normal mb-6">
+              Shopping Bag
+            </h1>
+
             {cart.map((item) => (
               <div
                 key={`${item.id}-${item.size}`}
@@ -93,9 +104,14 @@ export default function CartPage() {
                         <Trash2 size={16} />
                       </button>
                     </div>
-                    
+
                     <div className="flex flex-wrap gap-x-4 text-xs text-gray-500 mt-1">
-                      <p>Size: <span className="font-semibold text-maroon-900">{item.size}</span></p>
+                      <p>
+                        Size:{" "}
+                        <span className="font-semibold text-maroon-900">
+                          {item.size}
+                        </span>
+                      </p>
                     </div>
                   </div>
 
@@ -133,8 +149,10 @@ export default function CartPage() {
 
           {/* Sticky summary card */}
           <div className="bg-white rounded-[28px] border border-maroon-100/50 p-6 sm:p-8 shadow-luxury h-fit lg:sticky lg:top-28">
-            <h2 className="font-serif text-2xl text-maroon-950 font-medium mb-6">Order Summary</h2>
-            
+            <h2 className="font-serif text-2xl text-maroon-950 font-medium mb-6">
+              Order Summary
+            </h2>
+
             <div className="space-y-4 text-sm">
               <div className="flex justify-between text-gray-650 font-medium">
                 <span>Subtotal</span>
@@ -142,15 +160,17 @@ export default function CartPage() {
               </div>
               <div className="flex justify-between text-gray-650 font-medium">
                 <span>Shipping Fee</span>
-                <span className={shipping === 0 ? 'text-green-600 font-bold' : ''}>
-                  {shipping === 0 ? 'FREE' : `₹${shipping}`}
+                <span
+                  className={shipping === 0 ? "text-green-600 font-bold" : ""}
+                >
+                  {shipping === 0 ? "FREE" : `₹${shipping}`}
                 </span>
               </div>
-              
-              {subtotal < 2999 && (
+
+              {subtotal > 0 && (
                 <div className="bg-[#fff0f3] rounded-xl px-4 py-2.5 my-2 border border-maroon-100">
                   <p className="text-[11px] text-maroon-900 leading-normal">
-                    Add <strong>₹{(2999 - subtotal).toLocaleString()}</strong> more to unlock <strong>FREE SHIPPING</strong> 🎁
+                    <strong>FREE SHIPPING</strong> on every order 🎁
                   </p>
                 </div>
               )}
@@ -163,7 +183,7 @@ export default function CartPage() {
             </div>
 
             <button
-              onClick={() => router.push('/checkout')}
+              onClick={() => router.push("/checkout")}
               className="w-full mt-8 bg-maroon-850 hover:bg-maroon-950 text-white py-3.5 rounded-full font-bold uppercase tracking-wider text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-maroon-800/15"
             >
               Proceed to Checkout
@@ -175,7 +195,6 @@ export default function CartPage() {
               <span>Exchange only within 7 days &middot; Secure gateway</span>
             </div>
           </div>
-
         </div>
       </div>
     </main>
