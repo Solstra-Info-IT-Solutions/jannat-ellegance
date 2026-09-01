@@ -49,18 +49,18 @@ export default function VideoSection({
         <div className="group relative overflow-hidden rounded-2xl border border-pink-200/60 bg-maroon-950 shadow-xl sm:rounded-3xl">
 
           <video
-            className="block aspect-video w-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            poster={poster}
-          >
-            <source src={videoSrc} type="video/mp4" />
+  className="block h-auto w-full object-contain"
+  autoPlay
+  muted
+  loop
+  playsInline
+  preload="auto"
+  poster={poster}
+>
+  <source src={videoSrc} type="video/mp4" />
 
-            Your browser does not support the video tag.
-          </video>
+  Your browser does not support the video tag.
+</video>
 
           {/* Overlay */}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-maroon-950/35 via-transparent to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-50" />
