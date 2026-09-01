@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
                 <h2 className="font-serif text-3xl tracking-wide text-white leading-none">
                   JANNAT
                 </h2>
-                <p className="text-pink-300 text-xs tracking-[9px] mt-1 uppercase">
+                <p className="text-pink-300 text-m tracking-[5px] mt-1 uppercase">
                   Elegance
                 </p>
               </div>
