@@ -171,7 +171,7 @@ return ( <header className="sticky top-0 z-50 w-full border-b border-pink-100/80
             />
           </div>
 
-          <span className="mt-1 text-[8px] font-bold uppercase tracking-[0.42em] text-pink-600 sm:text-[10px]">
+          <span className="mt-1 text-[14px] font-bold uppercase tracking-[0.42em] text-pink-600 sm:text-[12px]">
             Elegance
           </span>
 
