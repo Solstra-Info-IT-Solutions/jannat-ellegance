@@ -22,16 +22,28 @@ export interface ProductSize {
 
 export interface Product {
   id: string;
+
   name: string;
+
   category: string;
+
   categoryId: string;
+
   price: number;
+
   discount: number;
 
-  discountType: 'percentage' | 'flat';
+  discountType:
+    | 'percentage'
+    | 'flat';
 
   isOnSale: boolean;
+
   isFeatured?: boolean;
+
+  isActive?: boolean;
+
+  status?: 'draft' | 'published';
 
   description: string;
 
@@ -39,12 +51,17 @@ export interface Product {
 
   imageUrls: string[];
 
-  // PRODUCT VIDEO
-  videoUrl?: string;
+  /* =====================
+     PRODUCT VIDEOS
+  ===================== */
+
+  videoUrls?: string[];
 
   metaTitle?: string;
+
   metaDescription?: string;
 
   oldPrice?: number;
+
   salePrice?: number;
 }

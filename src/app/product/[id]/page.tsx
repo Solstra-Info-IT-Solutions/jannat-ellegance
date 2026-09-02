@@ -292,32 +292,26 @@ export default function ProductPage() {
      VIDEO
   ========================================================= */
 
-  const videoUrl: string =
-    typeof product.videoUrl === 'string'
-      ? product.videoUrl
-      : '';
+ const videoUrls =
+  Array.isArray(product.videoUrls)
+    ? product.videoUrls
+    : [];
 
   /* =========================================================
      PRODUCT MEDIA
   ========================================================= */
 
-  const mediaItems: MediaItem[] = [
-    ...imageUrls.map(
-      (url): MediaItem => ({
-        type: 'image',
-        url,
-      })
-    ),
+  const mediaItems = [
+  ...imageUrls.map((url) => ({
+    type: 'image' as const,
+    url,
+  })),
 
-    ...(videoUrl
-      ? [
-          {
-            type: 'video' as const,
-            url: videoUrl,
-          },
-        ]
-      : []),
-  ];
+  ...videoUrls.map((url) => ({
+    type: 'video' as const,
+    url,
+  })),
+];
 
   const activeMedia: MediaItem =
     mediaItems[mediaIndex] || mediaItems[0];
