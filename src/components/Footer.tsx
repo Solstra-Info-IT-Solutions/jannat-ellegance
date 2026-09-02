@@ -186,7 +186,7 @@ const Footer: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-pink-200/60 text-xs text-center md:text-left">
-              &copy; {currentYear} Jannat Elegance. All rights reserved. Designed with grace.
+              &copy; {currentYear} JANNAT ELEGANCE. All rights reserved. Designed with grace.
             </p>
             <div className="flex gap-6 text-xs text-pink-200/60">
               <Link href="/privacy-policy" className="hover:text-pink-300 transition">
