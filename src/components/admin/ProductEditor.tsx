@@ -11,6 +11,30 @@ import {
 import { marked } from 'marked';
 import AdminShell from './AdminShell';
 
+
+type Product = {
+  id: string;
+  name: string;
+
+  category?: string;
+
+  categoryId?: string;
+
+  price: number;
+
+  imageUrls: string[];
+
+  isActive: boolean;
+
+  status: string;
+
+  sizes: {
+    size: string;
+    stock: number;
+  }[];
+};
+
+
 type Category = {
   _id: string;
   name: string;
