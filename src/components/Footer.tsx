@@ -195,7 +195,7 @@ const Footer: React.FC = () => {
               <Link href="/terms-and-conditions" className="hover:text-pink-300 transition">
                 Terms of Service
               </Link>
-              <Link href="/refund-policy" className="hover:text-pink-300 transition">
+              <Link href="/exchange-policy" className="hover:text-pink-300 transition">
                 Exchange Policy
               </Link>
             </div>
