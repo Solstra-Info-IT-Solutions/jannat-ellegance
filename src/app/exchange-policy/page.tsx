@@ -54,7 +54,7 @@ export default function RefundPage() {
 
           <h2 className="font-serif text-xl text-maroon-950 font-bold mt-8">3. How to Request an Exchange</h2>
           <p>
-            To initiate an exchange, please contact our support team at <strong className="text-maroon-850">support@jannatelegance.com</strong> or send a message via our WhatsApp floating support button with your Order Reference ID. Our boutique staff will guide you through the address shipping coordinates.
+            To initiate an exchange, please contact our support team at <strong className="text-maroon-850">jannatelegance05@gmail.com</strong> or send a message via our WhatsApp floating support button with your Order Reference ID. Our boutique staff will guide you through the address shipping coordinates.
           </p>
 
           <div className="border-t border-maroon-100/50 pt-6 mt-8 flex items-center justify-center gap-2 text-xs text-gray-400 font-medium">
