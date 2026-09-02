@@ -69,7 +69,7 @@ className={`fixed inset-0 z-[9999] flex items-center justify-center overflow-hid
       <div className="mt-2 flex items-center justify-center gap-3">
         <div className="h-px w-8 bg-pink-300" />
 
-        <p className="text-[10px] font-bold tracking-[6px] text-pink-600">
+        <p className="text-[12px] font-bold tracking-[6px] text-pink-600">
           ELEGANCE
         </p>
 
