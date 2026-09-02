@@ -32,7 +32,7 @@ href: '/shop',
 title: 'Exchange Policy',
 description: 'Exchange Policy Information',
 icon: Truck,
-href: '/refund-policy',
+href: '/exchange-policy',
 },
 ];
 

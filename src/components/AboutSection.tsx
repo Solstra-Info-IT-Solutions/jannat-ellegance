@@ -48,7 +48,7 @@ const AboutSection: React.FC = () => {
             About
 
             <span className="ml-2 bg-gradient-to-r from-rose-900 via-pink-600 to-rose-800 bg-clip-text text-transparent">
-              Jannat Elegance
+              JANNAT ELEGANCE
             </span>
 
           </h2>
@@ -181,7 +181,7 @@ const AboutSection: React.FC = () => {
             <div className="relative">
 
               {/* Icon + Heading */}
-
+              
               <div className="flex items-center gap-4">
 
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-pink-300/20 bg-pink-400/10 text-pink-300">

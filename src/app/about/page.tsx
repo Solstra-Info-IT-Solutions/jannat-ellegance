@@ -591,11 +591,11 @@ return ( <main className="min-h-screen overflow-hidden bg-[#fff8fa] text-maroon-
             <div className="mt-8 border-l-2 border-pink-400 pl-5">
 
               <p className="font-serif text-2xl font-semibold text-maroon-950">
-                Founder Name
+                Iram Naaz Khan (JANNAT)
               </p>
 
               <p className="mt-1 text-sm text-pink-600">
-                Founder, Jannat Elegance
+                Founder, JANNAT ELEGANCE
               </p>
 
             </div>
