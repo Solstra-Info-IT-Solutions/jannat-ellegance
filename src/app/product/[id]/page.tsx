@@ -31,39 +31,63 @@ const salePrice = (product: Product, basePrice: number) =>
    Supports:
    - HTML
    - Plain text
-   - Markdown-style headings
-   - Markdown bullet points
+   - Markdown headings
+   - Markdown bold text
+   - Bullet points
 ========================================================= */
 
-const formatDescription = (description: string) => {
-  if (!description) return '';
+const escapeHtml = (text: string) =>
+  text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 
-  // If admin already entered HTML, use it directly
+const formatInlineText = (text: string) =>
+  escapeHtml(text).replace(
+    /\*\*(.*?)\*\*/g,
+    '<strong>$1</strong>'
+  );
+
+const formatDescription = (description: string): string => {
+  if (!description?.trim()) return '';
+
+  // If HTML already exists, return it directly
   if (
-    description.includes('<p') ||
-    description.includes('<h') ||
-    description.includes('<ul') ||
-    description.includes('<li') ||
-    description.includes('<strong') ||
-    description.includes('<br')
+    /<\/?(p|h1|h2|h3|h4|ul|ol|li|strong|br|div)\b/i.test(
+      description
+    )
   ) {
     return description;
   }
 
   const lines = description
     .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
     .split('\n');
 
   let html = '';
   let bulletItems: string[] = [];
+  let paragraphLines: string[] = [];
 
   const flushBullets = () => {
     if (bulletItems.length > 0) {
       html += `<ul>${bulletItems
-        .map((item) => `<li>${item}</li>`)
+        .map((item) => `<li>${formatInlineText(item)}</li>`)
         .join('')}</ul>`;
 
       bulletItems = [];
+    }
+  };
+
+  const flushParagraph = () => {
+    if (paragraphLines.length > 0) {
+      html += `<p>${formatInlineText(
+        paragraphLines.join(' ')
+      )}</p>`;
+
+      paragraphLines = [];
     }
   };
 
@@ -72,35 +96,53 @@ const formatDescription = (description: string) => {
 
     // Empty line
     if (!trimmed) {
+      flushParagraph();
       flushBullets();
       return;
     }
 
-    // Markdown H3 ###
+    // H3
     if (trimmed.startsWith('### ')) {
+      flushParagraph();
       flushBullets();
 
-      html += `<h3>${trimmed.replace('### ', '')}</h3>`;
+      html += `<h3>${formatInlineText(
+        trimmed.replace(/^###\s+/, '')
+      )}</h3>`;
+
       return;
     }
 
-    // Markdown H2 ##
+    // H2
     if (trimmed.startsWith('## ')) {
+      flushParagraph();
       flushBullets();
 
-      html += `<h2>${trimmed.replace('## ', '')}</h2>`;
+      html += `<h2>${formatInlineText(
+        trimmed.replace(/^##\s+/, '')
+      )}</h2>`;
+
       return;
     }
 
-    // Bullet points
-    if (
-      trimmed.startsWith('- ') ||
-      trimmed.startsWith('• ')
-    ) {
+    // H1
+    if (trimmed.startsWith('# ')) {
+      flushParagraph();
+      flushBullets();
+
+      html += `<h2>${formatInlineText(
+        trimmed.replace(/^#\s+/, '')
+      )}</h2>`;
+
+      return;
+    }
+
+    // Bullet point
+    if (/^[-•*]\s+/.test(trimmed)) {
+      flushParagraph();
+
       bulletItems.push(
-        trimmed
-          .replace(/^-\s/, '')
-          .replace(/^•\s/, '')
+        trimmed.replace(/^[-•*]\s+/, '')
       );
 
       return;
@@ -108,19 +150,28 @@ const formatDescription = (description: string) => {
 
     flushBullets();
 
-    // Markdown bold **text**
-    const formattedText = trimmed.replace(
-      /\*\*(.*?)\*\*/g,
-      '<strong>$1</strong>'
-    );
-
-    html += `<p>${formattedText}</p>`;
+    paragraphLines.push(trimmed);
   });
 
+  flushParagraph();
   flushBullets();
 
   return html;
 };
+
+/* =========================================================
+   MEDIA TYPE
+========================================================= */
+
+type MediaItem =
+  | {
+      type: 'image';
+      url: string;
+    }
+  | {
+      type: 'video';
+      url: string;
+    };
 
 export default function ProductPage() {
   const router = useRouter();
@@ -133,15 +184,21 @@ export default function ProductPage() {
 
   const { id: productId } = useParams<{ id: string }>();
 
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] =
+    useState<Product | null>(null);
 
   const [loading, setLoading] = useState(true);
 
-  const [selectedSize, setSelectedSize] = useState('');
+  const [selectedSize, setSelectedSize] =
+    useState('');
 
   const [quantity, setQuantity] = useState(1);
 
-  const [imageIndex, setImageIndex] = useState(0);
+  const [mediaIndex, setMediaIndex] = useState(0);
+
+  /* =========================================================
+     LOAD PRODUCT
+  ========================================================= */
 
   useEffect(() => {
     if (!productId) return;
@@ -155,21 +212,36 @@ export default function ProductPage() {
       .then((data) => {
         if (!active) return;
 
-        setProduct(data?.product || null);
+        const loadedProduct = data?.product || null;
+
+        setProduct(loadedProduct);
 
         setSelectedSize(
-          data?.product?.sizes?.find(
-            (item: { stock: number }) => item.stock > 0
+          loadedProduct?.sizes?.find(
+            (item: { stock: number }) =>
+              item.stock > 0
           )?.size || ''
         );
       })
-      .catch(() => active && setProduct(null))
-      .finally(() => active && setLoading(false));
+      .catch(() => {
+        if (active) {
+          setProduct(null);
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false);
+        }
+      });
 
     return () => {
       active = false;
     };
   }, [productId]);
+
+  /* =========================================================
+     LOADING
+  ========================================================= */
 
   if (loading) {
     return (
@@ -178,6 +250,10 @@ export default function ProductPage() {
       </main>
     );
   }
+
+  /* =========================================================
+     PRODUCT NOT FOUND
+  ========================================================= */
 
   if (!product) {
     return (
@@ -198,25 +274,40 @@ export default function ProductPage() {
     );
   }
 
-  const imageUrls =
-    product.imageUrls?.length > 0
-      ? product.imageUrls
+  /* =========================================================
+     IMAGES
+  ========================================================= */
+
+  const imageUrls: string[] =
+    Array.isArray(product.imageUrls) &&
+    product.imageUrls.length > 0
+      ? product.imageUrls.filter(
+          (url): url is string =>
+            typeof url === 'string' &&
+            url.trim().length > 0
+        )
       : ['/images/logo.jpeg'];
 
-  /* ================= VIDEO ================= */
+  /* =========================================================
+     VIDEO
+  ========================================================= */
 
-  const videoUrl =
-    'videoUrl' in product && product.videoUrl
+  const videoUrl: string =
+    typeof product.videoUrl === 'string'
       ? product.videoUrl
       : '';
 
-  /* ================= PRODUCT MEDIA ================= */
+  /* =========================================================
+     PRODUCT MEDIA
+  ========================================================= */
 
-  const mediaItems = [
-    ...imageUrls.map((url) => ({
-      type: 'image' as const,
-      url,
-    })),
+  const mediaItems: MediaItem[] = [
+    ...imageUrls.map(
+      (url): MediaItem => ({
+        type: 'image',
+        url,
+      })
+    ),
 
     ...(videoUrl
       ? [
@@ -228,16 +319,19 @@ export default function ProductPage() {
       : []),
   ];
 
-  const [mediaIndex, setMediaIndex] = useState(0);
-
-  const activeMedia =
+  const activeMedia: MediaItem =
     mediaItems[mediaIndex] || mediaItems[0];
+
+  /* =========================================================
+     PRODUCT PRICING
+  ========================================================= */
 
   const selectedSizeDetails = product.sizes.find(
     (item) => item.size === selectedSize
   );
 
-  const selectedStock = selectedSizeDetails?.stock || 0;
+  const selectedStock =
+    selectedSizeDetails?.stock || 0;
 
   const basePrice =
     selectedSizeDetails?.price ?? product.price;
@@ -250,14 +344,26 @@ export default function ProductPage() {
       0
     ) === 0;
 
+  /* =========================================================
+     DESCRIPTION
+  ========================================================= */
+
   const descriptionHtml = formatDescription(
     product.description || ''
   );
 
+  /* =========================================================
+     ADD TO CART
+  ========================================================= */
+
   const add = () => {
     if (!selectedSize || !selectedStock) return;
 
-    addToCart(product, selectedSize, quantity);
+    addToCart(
+      product,
+      selectedSize,
+      quantity
+    );
   };
 
   return (
@@ -271,7 +377,6 @@ export default function ProductPage() {
           className="mb-8 flex items-center gap-2 text-sm font-semibold text-maroon-800 transition hover:text-pink-600"
         >
           <ArrowLeft size={16} />
-
           Back to shop
         </button>
 
@@ -285,7 +390,7 @@ export default function ProductPage() {
 
             <div className="relative aspect-[4/5] overflow-hidden rounded-[30px] border border-maroon-100 bg-white shadow-luxury">
 
-              {activeMedia?.type === 'image' ? (
+              {activeMedia.type === 'image' ? (
                 <Image
                   src={activeMedia.url}
                   alt={product.name}
@@ -295,10 +400,11 @@ export default function ProductPage() {
                 />
               ) : (
                 <video
-                  key={activeMedia?.url}
-                  src={activeMedia?.url}
+                  key={activeMedia.url}
+                  src={activeMedia.url}
                   controls
                   playsInline
+                  preload="metadata"
                   className="h-full w-full object-cover"
                 >
                   Your browser does not support video playback.
@@ -320,7 +426,7 @@ export default function ProductPage() {
               <button
                 onClick={() => toggleWishlist(product)}
                 aria-label="Save to wishlist"
-                className="absolute right-5 top-5 grid h-11 w-11 place-items-center rounded-full bg-white/90 text-maroon-800 shadow transition hover:scale-105"
+                className="absolute right-5 top-5 z-20 grid h-11 w-11 place-items-center rounded-full bg-white/90 text-maroon-800 shadow transition hover:scale-105"
               >
                 <Heart
                   size={19}
@@ -334,60 +440,63 @@ export default function ProductPage() {
 
             </div>
 
-            {/* ================= MEDIA THUMBNAILS ================= */}
+            {/* =====================================================
+                MEDIA THUMBNAILS
+            ===================================================== */}
 
             {mediaItems.length > 1 && (
               <div className="mt-4 flex gap-3 overflow-x-auto pb-2">
 
-                {mediaItems.map((media, index) => (
+                {mediaItems.map(
+                  (media: MediaItem, index: number) => (
+                    <button
+                      key={`${media.type}-${media.url}-${index}`}
+                      type="button"
+                      onClick={() =>
+                        setMediaIndex(index)
+                      }
+                      className={`relative h-20 w-16 flex-none overflow-hidden rounded-xl border-2 transition ${
+                        index === mediaIndex
+                          ? 'border-maroon-800'
+                          : 'border-transparent'
+                      }`}
+                    >
 
-                  <button
-                    key={`${media.type}-${media.url}`}
-                    onClick={() => setMediaIndex(index)}
-                    className={`relative h-20 w-16 flex-none overflow-hidden rounded-xl border-2 transition ${
-                      index === mediaIndex
-                        ? 'border-maroon-800'
-                        : 'border-transparent'
-                    }`}
-                  >
-
-                    {/* IMAGE THUMBNAIL */}
-
-                    {media.type === 'image' ? (
-                      <Image
-                        src={media.url}
-                        alt={`${product.name} view ${index + 1}`}
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-
-                      /* VIDEO THUMBNAIL */
-
-                      <div className="relative flex h-full w-full items-center justify-center bg-maroon-950">
-
-                        <video
+                      {media.type === 'image' ? (
+                        <Image
                           src={media.url}
-                          muted
-                          playsInline
-                          preload="metadata"
-                          className="absolute inset-0 h-full w-full object-cover opacity-60"
+                          alt={`${product.name} view ${
+                            index + 1
+                          }`}
+                          fill
+                          className="object-cover"
                         />
+                      ) : (
+                        <div className="relative flex h-full w-full items-center justify-center bg-maroon-950">
 
-                        <div className="relative z-10 grid h-9 w-9 place-items-center rounded-full bg-white text-maroon-900 shadow-lg">
-                          <Play
-                            size={15}
-                            className="ml-0.5 fill-current"
+                          <video
+                            src={media.url}
+                            muted
+                            playsInline
+                            preload="metadata"
+                            className="absolute inset-0 h-full w-full object-cover opacity-60"
                           />
+
+                          <div className="relative z-10 grid h-9 w-9 place-items-center rounded-full bg-white text-maroon-900 shadow-lg">
+
+                            <Play
+                              size={15}
+                              className="ml-0.5 fill-current"
+                            />
+
+                          </div>
+
                         </div>
+                      )}
 
-                      </div>
-
-                    )}
-
-                  </button>
-
-                ))}
+                    </button>
+                  )
+                )}
 
               </div>
             )}
@@ -400,13 +509,9 @@ export default function ProductPage() {
 
           <section className="font-sans">
 
-            {/* CATEGORY */}
-
             <p className="inline-block rounded-full border border-maroon-100 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-maroon-800">
               {product.category}
             </p>
-
-            {/* PRODUCT NAME */}
 
             <h1 className="mt-4 font-serif text-4xl text-maroon-950">
               {product.name}
@@ -423,7 +528,9 @@ export default function ProductPage() {
               {product.isOnSale && (
                 <>
                   <span className="text-lg text-maroon-500 line-through">
-                    ₹{basePrice.toLocaleString('en-IN')}
+                    ₹{basePrice.toLocaleString(
+                      'en-IN'
+                    )}
                   </span>
 
                   <span className="rounded bg-pink-100 px-2 py-1 text-xs font-bold text-pink-700">
@@ -435,7 +542,7 @@ export default function ProductPage() {
             </div>
 
             {/* =====================================================
-                PRODUCT DESCRIPTION
+                DESCRIPTION
             ===================================================== */}
 
             <div
@@ -478,11 +585,9 @@ export default function ProductPage() {
               }}
             />
 
-            {/* DIVIDER */}
-
             <div className="my-7 h-px bg-maroon-100" />
 
-            {/* ================= SIZE SELECTION ================= */}
+            {/* ================= SIZE ================= */}
 
             <p className="mb-3 text-sm font-bold text-maroon-950">
               Select size
@@ -491,7 +596,6 @@ export default function ProductPage() {
             <div className="flex flex-wrap gap-2">
 
               {product.sizes.map((item) => (
-
                 <button
                   disabled={item.stock < 1}
                   key={item.size}
@@ -507,29 +611,22 @@ export default function ProductPage() {
                 >
                   {item.size}
                 </button>
-
               ))}
 
             </div>
 
             {soldOut ? (
-
               <p className="mt-3 text-sm font-semibold text-pink-700">
                 This design is sold out. It will be available again after
                 restocking.
               </p>
-
             ) : (
-
               selectedSize && (
-
                 <p className="mt-2 text-xs text-gray-500">
                   {selectedStock} available · Price shown for size{' '}
                   {selectedSize}
                 </p>
-
               )
-
             )}
 
             {/* ================= QUANTITY ================= */}
@@ -539,8 +636,14 @@ export default function ProductPage() {
               <div className="flex items-center rounded-full border border-maroon-200 bg-white">
 
                 <button
+                  type="button"
                   onClick={() =>
-                    setQuantity(Math.max(1, quantity - 1))
+                    setQuantity(
+                      Math.max(
+                        1,
+                        quantity - 1
+                      )
+                    )
                   }
                   className="p-3"
                 >
@@ -552,7 +655,11 @@ export default function ProductPage() {
                 </span>
 
                 <button
-                  disabled={quantity >= selectedStock}
+                  type="button"
+                  disabled={
+                    !selectedStock ||
+                    quantity >= selectedStock
+                  }
                   onClick={() =>
                     setQuantity(quantity + 1)
                   }
@@ -570,16 +677,17 @@ export default function ProductPage() {
             <div className="mt-7 grid gap-3 sm:grid-cols-2">
 
               <button
+                type="button"
                 disabled={!selectedSize || !selectedStock}
                 onClick={add}
                 className="flex items-center justify-center gap-2 rounded-full bg-maroon-800 py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg transition hover:bg-maroon-950 disabled:opacity-50"
               >
                 <ShoppingBag size={16} />
-
                 Add to cart
               </button>
 
               <button
+                type="button"
                 disabled={!selectedSize || !selectedStock}
                 onClick={() => {
                   add();
