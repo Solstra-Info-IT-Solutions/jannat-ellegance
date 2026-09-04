@@ -156,7 +156,7 @@ export default function CheckoutPage() {
         paymentMethod: "COD",
 
         // You can use this in your backend
-        paymentStatus: "PENDING",
+        //paymentStatus: "PENDING",
       };
 
       const payload = selectedAddressId
